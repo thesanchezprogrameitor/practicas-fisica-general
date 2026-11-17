@@ -194,7 +194,7 @@
 
     // Nunca quieto: las personas respiran y la línea del cero fluye
     const reposo = gsap.timeline({ paused: true })
-      .to($$(".persona circle", raiz), { y: -3, duration: 1.6, ease: "sine.inOut", yoyo: true, repeat: -1, stagger: 0.7 }, 0)
+      .to($$(".persona .cabeza", raiz), { y: -3, duration: 1.6, ease: "sine.inOut", yoyo: true, repeat: -1, stagger: 0.7 }, 0)
       .to($(".caida__cero", raiz), { strokeDashoffset: -14, duration: 1, ease: "none", repeat: -1 }, 0);
     enPantalla(raiz, () => { tl.play(); reposo.play(); }, () => { tl.pause(); reposo.pause(); }, 0.1);
   };

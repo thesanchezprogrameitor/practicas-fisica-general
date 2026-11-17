@@ -7,6 +7,7 @@
   <meta name="description" content="Prácticas de laboratorio de Física General, UNAD. Un proyecto traído por el estudiante Leonardo Sánchez.">
   <meta name="author" content="Leonardo Sánchez">
   <meta name="theme-color" content="#0b0c0e">
+  <meta name="color-scheme" content="dark">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230b0c0e'/><text x='32' y='46' font-family='Georgia,serif' font-size='42' text-anchor='middle' fill='%23ff5a1f'>±</text></svg>">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,8 +21,8 @@
       min-height: 100vh;
       min-height: 100svh;
       display: grid;
-      grid-template-rows: auto 1fr auto;
-      gap: 3rem;
+      grid-template-rows: auto 1fr auto auto;
+      gap: clamp(1.2rem, 3vh, 2.4rem);
       padding: calc(var(--gutter) + 56px) var(--gutter) var(--gutter);
       overflow: hidden;
       isolation: isolate;
@@ -41,7 +42,7 @@
       align-self: end;
       font-family: var(--serif);
       font-weight: 400;
-      font-size: clamp(3.4rem, 12vw, 12rem);
+      font-size: clamp(3.4rem, min(12vw, 15vh), 12rem);
       line-height: 0.88;
       letter-spacing: -0.025em;
     }
@@ -57,7 +58,7 @@
       grid-template-columns: 5rem 1fr auto;
       align-items: center;
       gap: 1rem 2rem;
-      padding: clamp(1.2rem, 3vh, 2rem) 0;
+      padding: clamp(1rem, 2.4vh, 1.6rem) 0;
       border-bottom: 1px solid var(--linea-fuerte);
       text-decoration: none;
       overflow: hidden;
@@ -85,6 +86,47 @@
       .item i { grid-column: 2; }
     }
     .js .inicio [data-entra] { opacity: 0; }
+
+    .inicio__pm {
+      position: absolute;
+      z-index: -1;
+      right: 3vw;
+      top: 8vh;
+      font-family: var(--serif);
+      font-size: min(48vw, 62vh);
+      line-height: 0.8;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255, 90, 31, 0.5);
+      pointer-events: none;
+      user-select: none;
+      animation: flotar 14s ease-in-out infinite alternate;
+    }
+    @keyframes flotar {
+      from { transform: translateY(0) rotate(-4deg); }
+      to { transform: translateY(-3vh) rotate(5deg); }
+    }
+    .inicio__regla {
+      position: relative;
+      height: 16px;
+      background:
+        repeating-linear-gradient(90deg, var(--papel-3) 0 1px, transparent 1px 12px) bottom / 100% 6px no-repeat,
+        repeating-linear-gradient(90deg, var(--papel-2) 0 1px, transparent 1px 60px) bottom / 100% 13px no-repeat;
+      opacity: 0.6;
+      overflow: hidden;
+    }
+    .inicio__regla span {
+      position: absolute;
+      bottom: 0;
+      width: 2px;
+      height: 16px;
+      background: var(--acento);
+      box-shadow: 0 0 12px var(--acento);
+      animation: barrer 7s ease-in-out infinite alternate;
+    }
+    @keyframes barrer { from { left: 0; } to { left: calc(100% - 2px); } }
+    @media (prefers-reduced-motion: reduce) {
+      .inicio__pm, .inicio__regla span { animation: none; }
+    }
   </style>
 
   <script>
@@ -108,13 +150,14 @@
   <div class="cursor" aria-hidden="true"><span class="cursor__coord"></span></div>
 
   <header class="barra">
-    <span class="barra__marca"><i class="barra__punto"></i><b>UNAD</b><span>· Física General</span></span>
+    <span class="barra__marca"><i class="barra__punto"></i><b>Física General</b></span>
   </header>
 
   <main class="inicio">
+    <div class="inicio__pm" aria-hidden="true">±</div>
     <div class="inicio__meta mono" data-entra>
-      <span>Universidad Nacional Abierta y a Distancia (UNAD)</span>
-      <span>Física General</span>
+      <span>Universidad Nacional Abierta y a Distancia</span>
+      <span>Tres prácticas · Un mismo hilo: medir bien</span>
     </div>
 
     <div>
@@ -135,6 +178,7 @@
         <div class="item item--pronto"><b>03</b><span>Práctica 3</span><i class="mono">Próximamente</i></div>
       </li>
     </ol>
+    <div class="inicio__regla" aria-hidden="true"><span></span></div>
   </main>
 
   <script>

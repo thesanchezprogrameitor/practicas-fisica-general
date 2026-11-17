@@ -7,6 +7,7 @@
   <meta name="description" content="Práctica 1 de Física General, UNAD: error e incertidumbre en mediciones directas e indirectas. Un proyecto traído por el estudiante Leonardo Sánchez.">
   <meta name="author" content="Leonardo Sánchez">
   <meta name="theme-color" content="#0b0c0e">
+  <meta name="color-scheme" content="dark">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="es_CO">
   <meta property="og:title" content="Práctica 1 · Error e incertidumbre en mediciones directas e indirectas">
@@ -169,15 +170,17 @@
             <svg class="caida__svg" viewBox="0 0 520 520" role="img" aria-label="Animación: una persona sostiene una regla en vertical y la suelta sin aviso; la otra, con los dedos abiertos a la altura del cero, la atrapa.">
               <path class="caida__suelo" d="M24 500 H496"/>
               <g class="persona">
-                <circle cx="118" cy="150" r="22"/>
+                <circle class="cabeza" cx="118" cy="150" r="22"/>
                 <path d="M118 172 V330 M118 330 L98 500 M118 330 L140 500 M118 198 L96 262 L102 320"/>
                 <path id="brazo-a" d="M118 198 L180 150 L232 84"/>
+                <circle class="mano" cx="229" cy="88" r="6"/>
                 <text x="118" y="112" class="persona__txt">Suelta</text>
               </g>
               <g class="persona">
-                <circle cx="412" cy="196" r="22"/>
+                <circle class="cabeza" cx="412" cy="196" r="22"/>
                 <path d="M412 218 V372 M412 372 L392 500 M412 372 L434 500 M412 244 L434 306 L430 360"/>
                 <path d="M412 244 L356 292 L294 310"/>
+                <circle class="mano" cx="297" cy="312" r="6"/>
                 <text x="412" y="158" class="persona__txt">Atrapa</text>
               </g>
               <path class="caida__cero" d="M196 310 H330"/>
@@ -422,8 +425,15 @@
       <p class="pie__frase"><span class="linea"><span>Medir bien no es medir sin error.</span></span> <span class="linea"><span><em>Es saber cuánto error hay.</em></span></span></p>
     </div>
 
+    <div class="pie__cinta" aria-hidden="true">
+      <div class="pie__cinta-pista">
+        <span>Medir <b>±</b> repetir <b>±</b> comparar <b>±</b> dudar <b>±</b> confiar <b>±</b> </span>
+        <span>Medir <b>±</b> repetir <b>±</b> comparar <b>±</b> dudar <b>±</b> confiar <b>±</b> </span>
+      </div>
+    </div>
+
     <nav class="pie__practicas" aria-label="Prácticas de laboratorio">
-      <a class="pie__p pie__p--actual" href="./" aria-current="page">
+      <a class="pie__p pie__p--actual" href="#portada" aria-current="page">
         <b>01</b><span>Error e incertidumbre en mediciones directas e indirectas</span><i class="mono">Estás aquí</i>
       </a>
       <span class="pie__p pie__p--pronto">

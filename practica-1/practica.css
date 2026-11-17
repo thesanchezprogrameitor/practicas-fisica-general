@@ -61,17 +61,6 @@
   user-select: none;
 }
 
-.portada__meta {
-  display: grid;
-  grid-template-columns: 1.6fr 1fr auto;
-  gap: 1rem 2rem;
-  padding-bottom: 1.2rem;
-  border-bottom: 1px solid var(--linea);
-  color: var(--papel-2);
-}
-.portada__meta p { line-height: 1.5; }
-.portada__meta-k { display: block; color: var(--papel-3); font-size: 0.6rem; margin-bottom: 0.2rem; }
-.portada__meta p:last-child { text-align: right; }
 
 .portada__centro {
   align-self: center;
@@ -123,15 +112,6 @@
   gap: 2rem;
   padding-bottom: clamp(1.4rem, 3vh, 2.2rem);
 }
-.portada__autor { display: grid; gap: 0.35rem; }
-.portada__autor .mono { color: var(--papel-3); }
-.portada__autor strong {
-  font-family: var(--serif);
-  font-weight: 400;
-  font-size: clamp(2rem, 4vw, 3.4rem);
-  line-height: 1;
-}
-.portada__autor strong::after { content: "."; color: var(--acento); }
 
 .portada__bajar {
   display: inline-flex;
@@ -317,7 +297,7 @@
 /* Índice lateral de actividades */
 .indice-cap {
   position: fixed;
-  right: var(--gutter);
+  right: 14px;
   top: 50%;
   z-index: 40;
   display: grid;
@@ -417,7 +397,8 @@
   background: radial-gradient(ellipse 45% 50% at 50% 55%, rgba(255, 90, 31, 0.1), transparent 70%);
 }
 .caida__suelo { stroke: var(--linea-fuerte); }
-.persona circle { fill: var(--tinta-2); stroke: var(--papel-2); stroke-width: 2; }
+.persona .cabeza { fill: var(--tinta-2); stroke: var(--papel-2); stroke-width: 2; }
+.persona .mano { fill: #b97b5c; }
 .persona path { fill: none; stroke: var(--papel-2); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .persona__txt { fill: var(--papel-3); font: 11px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; text-anchor: middle; }
 .caida__cero { stroke: rgba(255, 90, 31, 0.55); stroke-dasharray: 3 4; }
@@ -597,7 +578,7 @@
 }
 .pie .etiqueta { color: #c2410c; }
 .pie__frase {
-  margin: 1.4rem 0 clamp(4rem, 10vh, 7rem);
+  margin: 1.4rem 0 clamp(2.5rem, 6vh, 4rem);
   font-family: var(--serif);
   font-size: clamp(2.6rem, 7.4vw, 8rem);
   line-height: 0.95;
@@ -639,3 +620,24 @@
   .pie__p { grid-template-columns: 2.6rem 1fr; }
   .pie__p i { grid-column: 2; }
 }
+
+/* Cinta en movimiento del pie */
+.pie__cinta {
+  margin: 0 calc(var(--gutter) * -1) clamp(3rem, 8vh, 5rem);
+  padding: 0.5rem 0;
+  overflow: hidden;
+  border-top: 1px solid rgba(11, 12, 14, 0.18);
+  border-bottom: 1px solid rgba(11, 12, 14, 0.18);
+}
+.pie__cinta-pista { display: flex; width: max-content; animation: cinta 40s linear infinite; }
+.pie__cinta span {
+  padding-right: 0.3em;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(2rem, 5vw, 4.6rem);
+  line-height: 1.15;
+  white-space: nowrap;
+}
+.pie__cinta b { font-style: normal; font-weight: 400; color: #c2410c; padding: 0 0.15em; }
+@keyframes cinta { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .pie__cinta-pista { animation: none; } }

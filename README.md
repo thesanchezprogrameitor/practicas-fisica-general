@@ -15,6 +15,7 @@ Páginas de presentación de las prácticas de laboratorio del curso **Física G
 
 ```
 index.html            Índice con las tres prácticas
+404.html              Página para enlaces que no existen
 assets/
   css/comun.css       Paleta, tipografía, barra superior, cursor, carga y telón
   js/comun.js         Scroll suave, barra de progreso, cursor, carga y transiciones
