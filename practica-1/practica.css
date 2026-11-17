@@ -210,30 +210,19 @@
   min-height: 100vh;
   min-height: 100svh;
   display: grid;
-  align-content: center;
-  gap: clamp(1.2rem, 3vh, 2rem);
-  padding: clamp(5rem, 12vh, 8rem) var(--gutter);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 6rem);
+  padding: clamp(5rem, 11vh, 7rem) var(--gutter) clamp(3rem, 7vh, 5rem);
   border-top: 1px solid var(--linea);
   overflow: hidden;
   isolation: isolate;
 }
-.practica__num {
-  position: absolute;
-  z-index: -1;
-  right: -0.04em;
-  bottom: -0.18em;
-  font-family: var(--serif);
-  font-size: clamp(16rem, 48vw, 46rem);
-  line-height: 1;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(255, 90, 31, 0.3);
-  pointer-events: none;
-  user-select: none;
-}
+.practica__texto { display: grid; gap: clamp(1.1rem, 2.8vh, 2rem); }
 .practica__titulo {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(3.4rem, min(12.5vw, 19vh), 13.5rem);
+  font-size: clamp(3.2rem, min(8.2vw, 17vh), 10rem);
   line-height: 0.9;
   letter-spacing: -0.025em;
 }
@@ -241,13 +230,14 @@
 .practica__titulo .linea--it {
   margin-top: 0.2em;
   font-style: italic;
-  font-size: 0.34em;
+  font-size: 0.4em;
   line-height: 1.1;
   letter-spacing: 0;
   color: var(--papel-2);
 }
+.practica__lead { max-width: 44ch; font-size: clamp(1rem, 1.3vw, 1.2rem); color: var(--papel-2); }
 .practica__regla {
-  width: min(560px, 100%);
+  width: min(520px, 100%);
   height: 18px;
   background:
     repeating-linear-gradient(90deg, var(--papel-3) 0 1px, transparent 1px 10px) bottom / 100% 6px no-repeat,
@@ -263,23 +253,51 @@
   transform-origin: left;
 }
 
+/* Nube de mediciones */
+.nube { margin: 0; width: 100%; max-width: 560px; justify-self: end; }
+.nube svg { width: 100%; height: auto; max-height: 80vh; overflow: visible; }
+.nube__diana circle { fill: none; stroke: var(--linea-fuerte); }
+.nube__diana circle:first-child { stroke: rgba(237, 233, 225, 0.32); }
+.nube__diana path { stroke: var(--linea-fuerte); stroke-dasharray: 2 6; }
+#nube-puntos circle { fill: var(--papel); }
+#nube-puntos circle.reciente { fill: var(--acento); }
+.nube__anillo { fill: rgba(255, 90, 31, 0.07); stroke: var(--acento); stroke-width: 1.3; stroke-dasharray: 4 5; }
+.nube__media { fill: var(--acento); }
+.nube__etq,
+.nube__txt { font: 10px var(--mono); letter-spacing: 0.1em; text-transform: uppercase; }
+.nube__etq { fill: var(--acento); }
+.nube__txt { fill: var(--papel-3); text-anchor: middle; }
+#nube-histo rect { fill: rgba(237, 233, 225, 0.5); }
+#nube-histo rect.alto { fill: var(--acento); }
+.nube__base { stroke: var(--linea-fuerte); }
+
+@media (max-width: 900px) {
+  .practica { grid-template-columns: 1fr; align-content: center; }
+  .nube { justify-self: center; max-width: 420px; }
+}
+
 /* =========================================================
    2. LO QUE HICIMOS
    ========================================================= */
 .hicimos {
   position: relative;
-  padding: clamp(6rem, 16vh, 12rem) var(--gutter) 0;
+  padding: 0 var(--gutter);
+  border-top: 1px solid var(--linea);
 }
 
 .hicimos__cab {
-  max-width: 1200px;
-  margin-bottom: clamp(5rem, 14vh, 10rem);
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  padding: calc(var(--gutter) + 56px) 0 clamp(2rem, 6vh, 4rem);
+  background: var(--tinta);
 }
 .hicimos__titulo {
-  margin: 1.2rem 0 clamp(2rem, 6vh, 4rem);
+  margin: 1rem 0 clamp(1.4rem, 4vh, 3rem);
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(3.6rem, 13vw, 13rem);
+  font-size: clamp(3.4rem, min(12vw, 21vh), 12rem);
   line-height: 0.88;
   letter-spacing: -0.025em;
 }
@@ -287,9 +305,9 @@
 .hicimos__titulo em { color: var(--acento); }
 
 .hicimos__manifiesto {
-  max-width: 30ch;
+  max-width: 34ch;
   font-family: var(--serif);
-  font-size: clamp(1.7rem, 3.6vw, 3.4rem);
+  font-size: clamp(1.5rem, min(3.3vw, 5vh), 3.2rem);
   line-height: 1.12;
   letter-spacing: -0.01em;
 }
@@ -335,8 +353,7 @@
   background: currentColor;
   transition: width 0.4s var(--ease-out);
 }
-.indice-cap a:hover span,
-.indice-cap a.activo span { opacity: 1; transform: none; }
+.indice-cap a:hover span { opacity: 1; transform: none; }
 .indice-cap a.activo { color: var(--papel); }
 .indice-cap a.activo b::after { background: var(--acento); width: 18px; }
 @media (max-width: 1100px) { .indice-cap { display: none; } }
@@ -347,9 +364,9 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
   gap: clamp(2.5rem, 7vw, 8rem);
-  align-items: start;
+  align-items: center;
   max-width: 1360px;
-  padding: clamp(4rem, 12vh, 9rem) clamp(0px, 4vw, 90px) clamp(4rem, 12vh, 9rem) 0;
+  padding: clamp(3.5rem, 10vh, 7rem) clamp(0px, 6vw, 110px) clamp(3.5rem, 10vh, 7rem) 0;
   border-top: 1px solid var(--linea);
 }
 .cap__texto { position: relative; display: grid; gap: 1.3rem; max-width: 56ch; }
@@ -377,36 +394,27 @@
 }
 .cap__titulo em { color: var(--acento); }
 
-.cap__visual { position: sticky; top: 12vh; }
+.cap__visual { position: relative; }
 
 @media (max-width: 900px) {
   .cap { grid-template-columns: 1fr; padding-right: 0; }
-  .cap__visual { position: relative; top: 0; }
 }
 
 /* ---------- 01 · Caída de la regla (automática) ---------- */
-.caida {
-  margin: 0;
-  border: 1px solid var(--linea-fuerte);
-  border-radius: 18px;
-  background: linear-gradient(160deg, var(--tinta-3), var(--tinta-2));
-  overflow: hidden;
-  box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.8);
-}
+.caida { margin: 0; }
 .caida__cab {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
-  padding: 14px 18px;
-  border-bottom: 1px solid var(--linea);
+  padding: 0 0 6px;
   color: var(--papel-3);
 }
 .caida__estado { color: var(--acento); text-align: right; }
 .caida__svg {
   width: 100%;
   height: auto;
-  max-height: 58vh;
-  background: radial-gradient(ellipse at 50% 60%, rgba(255, 90, 31, 0.09), transparent 60%);
+  max-height: 68vh;
+  background: radial-gradient(ellipse 45% 50% at 50% 55%, rgba(255, 90, 31, 0.1), transparent 70%);
 }
 .caida__suelo { stroke: var(--linea-fuerte); }
 .persona circle { fill: var(--tinta-2); stroke: var(--papel-2); stroke-width: 2; }
@@ -420,7 +428,7 @@
 .dedo { fill: none; stroke: #c98d6c; stroke-width: 9; stroke-linecap: round; }
 .caida__cota line { stroke: var(--acento); stroke-width: 1.5; }
 .caida__cota text { fill: var(--acento); font: italic 18px var(--serif); text-anchor: end; }
-.caida__pie { padding: 14px 18px 18px; border-top: 1px solid var(--linea); }
+.caida__pie { padding: 4px 0 0; }
 .caida__lectura { min-height: 3em; font-size: 0.9rem; line-height: 1.5; color: var(--papel-2); }
 .caida__lectura b { font-weight: 500; color: var(--acento); }
 .caida__pista {
@@ -548,6 +556,8 @@
 .idea__campana svg { width: 100%; height: auto; overflow: visible; }
 .campana__curva { fill: none; stroke: var(--papel); stroke-width: 1.6; }
 .campana__banda { fill: rgba(255, 90, 31, 0.2); stroke: none; }
+.campana__gotas circle { fill: var(--papel); }
+.campana__gotas circle.dentro { fill: var(--acento); }
 .campana__eje { stroke: var(--linea-fuerte); }
 .campana__centro { stroke: var(--papel-3); stroke-dasharray: 3 5; }
 .campana__txt { fill: var(--papel-3); font: 10px var(--mono); letter-spacing: 0.1em; text-transform: uppercase; text-anchor: middle; }

@@ -97,14 +97,36 @@
          PRÁCTICA (título)
          ===================================================== -->
     <section id="practica" class="practica">
-      <span class="practica__num" aria-hidden="true">01</span>
-      <p class="etiqueta" data-revela>Práctica 1</p>
-      <h1 class="practica__titulo">
-        <span class="linea"><span>Error e</span></span>
-        <span class="linea"><span><em>incertidumbre</em></span></span>
-        <span class="linea linea--it"><span>en mediciones directas e indirectas</span></span>
-      </h1>
-      <div class="practica__regla" aria-hidden="true"><span></span></div>
+      <div class="practica__texto">
+        <p class="etiqueta" data-revela>Práctica 1</p>
+        <h1 class="practica__titulo">
+          <span class="linea"><span>Error e</span></span>
+          <span class="linea"><span><em>incertidumbre</em></span></span>
+          <span class="linea linea--it"><span>en mediciones directas e indirectas</span></span>
+        </h1>
+        <p class="practica__lead" data-revela>Medimos tiempos, longitudes y masas para descubrir algo que no se ve a simple vista: cuánto puede fallar una medición y de dónde viene esa duda.</p>
+        <div class="practica__regla" aria-hidden="true"><span></span></div>
+      </div>
+
+      <figure class="nube" aria-hidden="true">
+        <svg id="nube" viewBox="0 0 520 560">
+          <text x="260" y="26" class="nube__txt">Cada punto es una medición</text>
+          <g class="nube__diana">
+            <circle cx="260" cy="220" r="40"/>
+            <circle cx="260" cy="220" r="80"/>
+            <circle cx="260" cy="220" r="120"/>
+            <circle cx="260" cy="220" r="160"/>
+            <path d="M260 44 V396 M84 220 H436"/>
+          </g>
+          <g id="nube-puntos"></g>
+          <circle id="nube-anillo" class="nube__anillo" cx="260" cy="220" r="40"/>
+          <circle id="nube-media" class="nube__media" cx="260" cy="220" r="4.5"/>
+          <text id="nube-etq" class="nube__etq" x="300" y="180">± incertidumbre</text>
+          <g id="nube-histo"></g>
+          <path class="nube__base" d="M96 520 H424"/>
+          <text x="260" y="546" class="nube__txt">Cuántas veces salió cada valor</text>
+        </svg>
+      </figure>
     </section>
 
     <!-- =====================================================
@@ -374,6 +396,7 @@
             <svg viewBox="0 0 600 200" aria-hidden="true">
               <path class="campana__banda" id="campana-banda" d=""/>
               <path class="campana__curva" id="campana-curva" d=""/>
+              <g id="campana-gotas" class="campana__gotas"></g>
               <path class="campana__eje" d="M20 180 H580"/>
               <path class="campana__centro" d="M300 24 V180"/>
               <text x="300" y="16" class="campana__txt">valor más probable</text>

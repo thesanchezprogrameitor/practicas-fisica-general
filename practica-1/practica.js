@@ -11,6 +11,18 @@
   const NS = "http://www.w3.org/2000/svg";
   const coma = (n, d = 1) => n.toFixed(d).replace(".", ",");
 
+  const gauss = () => {
+    let u = 0, v = 0;
+    while (!u) u = Math.random();
+    while (!v) v = Math.random();
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  };
+  // Ejecuta jugar() mientras el elemento esté en pantalla y parar() cuando salga.
+  const enPantalla = (el, jugar, parar, umbral = 0.15) => {
+    if (!el || !("IntersectionObserver" in window)) { jugar(); return; }
+    new IntersectionObserver(([e]) => (e.isIntersecting ? jugar() : parar()), { threshold: umbral }).observe(el);
+  };
+
   const nodoSvg = (tag, attrs, padre) => {
     const n = document.createElementNS(NS, tag);
     for (const k in attrs) n.setAttribute(k, attrs[k]);
@@ -113,7 +125,7 @@
 
     const PX = 8, CERO = 310, G = 9.81, LENTA = 4; // px por cm, línea del cero, m/s², cámara lenta
     const intentos = [17.6, 14.1, 20.3, 12.9, 15.8, 13.4]; // cm (ilustrativos)
-    const esperas = [1.0, 1.7, 0.8, 1.4, 2.0, 1.1]; // s: la regla se suelta sin aviso
+    const esperas = [0.7, 1.1, 0.5, 0.9, 1.3, 0.6]; // s: la regla se suelta sin aviso
     const MIN = 140, MAX = 220; // ms, escala de la pista
 
     for (let i = 0; i <= 30; i++) {
@@ -173,19 +185,128 @@
           punto(d);
         })
         .fromTo(cota, { opacity: 0 }, { opacity: 1, duration: 0.3 })
-        .to({}, { duration: 2 })
+        .to({}, { duration: 1.5 })
         .to(cota, { opacity: 0, duration: 0.3 })
         .to(dedosB, { x: 0, duration: 0.3 }, "<")
         .to(regla, { y: 0, duration: 0.8, ease: "power2.inOut" }, "<0.1")
         .to(dedosA, { x: 0, duration: 0.2 }, ">-0.1");
     });
 
-    ScrollTrigger.create({
-      trigger: raiz,
-      start: "top 85%",
-      end: "bottom 15%",
-      onToggle: (s) => (s.isActive ? tl.play() : tl.pause()),
-    });
+    // Nunca quieto: las personas respiran y la línea del cero fluye
+    const reposo = gsap.timeline({ paused: true })
+      .to($$(".persona circle", raiz), { y: -3, duration: 1.6, ease: "sine.inOut", yoyo: true, repeat: -1, stagger: 0.7 }, 0)
+      .to($(".caida__cero", raiz), { strokeDashoffset: -14, duration: 1, ease: "none", repeat: -1 }, 0);
+    enPantalla(raiz, () => { tl.play(); reposo.play(); }, () => { tl.pause(); reposo.pause(); }, 0.1);
+  };
+
+  /* =======================================================
+     Nube de mediciones (pantalla del título)
+     Cada punto es una medición: se dispersan alrededor de un
+     centro, el anillo marca la incertidumbre y abajo se arma
+     el histograma. Se mueve sin parar mientras está visible.
+     ======================================================= */
+  const iniciarNube = () => {
+    const svg = $("#nube");
+    if (!svg) return;
+    const gp = $("#nube-puntos"), anillo = $("#nube-anillo"), media = $("#nube-media");
+    const etq = $("#nube-etq"), histo = $("#nube-histo");
+    const MX = 270, MY = 214, S = 40; // el centro de las mediciones no cae justo en la referencia
+    const BINS = 20, X0 = 100, ANCHO = 16, BASE = 520;
+    const barras = Array.from({ length: BINS }, (_, i) =>
+      nodoSvg("rect", { x: X0 + i * ANCHO + 2, y: BASE, width: ANCHO - 4, height: 0, rx: 2 }, histo));
+    const cuentas = new Array(BINS).fill(0);
+    const vivos = [], recientes = [];
+    let mx = MX, my = MY, sd = S;
+
+    const nuevo = (t) => {
+      const x = MX + gauss() * S, y = MY + gauss() * S * 0.8;
+      const c = nodoSvg("circle", { cx: x.toFixed(1), cy: y.toFixed(1), r: 0 }, gp);
+      vivos.push({ c, t });
+      recientes.push([x, y]);
+      if (recientes.length > 40) recientes.shift();
+      const b = Math.floor((x - X0) / ANCHO);
+      if (b >= 0 && b < BINS) cuentas[b] += 1;
+    };
+    const pintarBarras = () => {
+      const max = Math.max(...cuentas);
+      cuentas.forEach((n, i) => {
+        const h = Math.min(86, n * 11);
+        barras[i].setAttribute("y", (BASE - h).toFixed(1));
+        barras[i].setAttribute("height", h.toFixed(1));
+        barras[i].classList.toggle("alto", n > 0 && n === max);
+      });
+    };
+    const pintarAnillo = () => {
+      anillo.setAttribute("cx", mx.toFixed(1));
+      anillo.setAttribute("cy", my.toFixed(1));
+      anillo.setAttribute("r", sd.toFixed(1));
+      media.setAttribute("cx", mx.toFixed(1));
+      media.setAttribute("cy", my.toFixed(1));
+      etq.setAttribute("x", (mx + sd * 0.72 + 8).toFixed(1));
+      etq.setAttribute("y", (my - sd * 0.72 - 6).toFixed(1));
+    };
+
+    if (!animar) {
+      for (let i = 0; i < 70; i++) nuevo(0);
+      vivos.forEach((p) => { p.c.setAttribute("r", 3); p.c.setAttribute("opacity", 0.6); });
+      pintarBarras();
+      pintarAnillo();
+      return;
+    }
+
+    const VIDA = 4200, CADA = 140;
+    let ultimo = 0, visible = false, corriendo = false;
+    const ciclo = (ahora) => {
+      if (!visible) { corriendo = false; return; }
+      if (ahora - ultimo > CADA) { nuevo(ahora); ultimo = ahora; }
+      for (let i = vivos.length - 1; i >= 0; i--) {
+        const p = vivos[i], e = (ahora - p.t) / VIDA;
+        if (e >= 1) { gp.removeChild(p.c); vivos.splice(i, 1); continue; }
+        const r = e < 0.06 ? (e / 0.06) * 5 : 5 - e * 2.2;
+        p.c.setAttribute("r", Math.max(0, r).toFixed(2));
+        p.c.setAttribute("opacity", (e < 0.06 ? 1 : 1 - (e - 0.06) / 0.94).toFixed(3));
+        p.c.classList.toggle("reciente", e < 0.12);
+      }
+      const n = recientes.length;
+      if (n > 2) {
+        let sx = 0, sy = 0, v = 0;
+        recientes.forEach(([x, y]) => { sx += x; sy += y; });
+        const ax = sx / n, ay = sy / n;
+        recientes.forEach(([x, y]) => { v += (x - ax) ** 2 + (y - ay) ** 2; });
+        const s = Math.sqrt(v / (2 * n));
+        mx += (ax - mx) * 0.04; my += (ay - my) * 0.04; sd += (s - sd) * 0.04;
+      }
+      for (let i = 0; i < BINS; i++) cuentas[i] *= 0.995;
+      pintarBarras();
+      pintarAnillo();
+      requestAnimationFrame(ciclo);
+    };
+    enPantalla(svg, () => {
+      visible = true;
+      if (!corriendo) { corriendo = true; requestAnimationFrame(ciclo); }
+    }, () => { visible = false; }, 0);
+  };
+
+  /* =======================================================
+     Gotas bajo la campana: mediciones que caen sobre el eje
+     ======================================================= */
+  const iniciarGotas = () => {
+    const g = $("#campana-gotas");
+    if (!g || !animar) return;
+    const c = 300, s = 72, alto = 150, base = 180;
+    let reloj = null;
+    const soltar = () => {
+      const x = Math.max(30, Math.min(570, c + gauss() * s));
+      const y0 = base - alto * Math.exp(-((x - c) ** 2) / (2 * s * s));
+      const p = nodoSvg("circle", { cx: x.toFixed(1), cy: y0.toFixed(1), r: 3 }, g);
+      if (Math.abs(x - c) <= s) p.classList.add("dentro");
+      gsap.fromTo(p, { attr: { cy: y0 } }, {
+        attr: { cy: base - 3 }, duration: 0.8, ease: "power2.in",
+        onComplete: () => gsap.to(p, { opacity: 0, duration: 1.2, delay: 0.4, onComplete: () => g.removeChild(p) }),
+      });
+    };
+    enPantalla($(".idea__campana"), () => { if (!reloj) reloj = setInterval(soltar, 170); },
+      () => { clearInterval(reloj); reloj = null; }, 0);
   };
 
   /* =======================================================
@@ -292,10 +413,10 @@
     const manifiesto = $("[data-palabras]");
     if (manifiesto) {
       const palabras = partirPalabras(manifiesto);
-      gsap.to(palabras, {
-        opacity: 1, ease: "none", stagger: 0.1,
-        scrollTrigger: { trigger: manifiesto, start: "top 78%", end: "bottom 42%", scrub: true },
-      });
+      // La cabecera se queda fija una pantalla mientras todo el texto se enciende
+      gsap.timeline({ scrollTrigger: { trigger: ".hicimos__cab", start: "top top", end: "+=75%", scrub: 0.5, pin: true, anticipatePin: 1 } })
+        .to(palabras, { opacity: 1, ease: "none", stagger: 0.1, duration: 0.3 })
+        .to({}, { duration: 0.5 });
     }
 
     // Números grandes de capítulo
@@ -304,7 +425,7 @@
     });
 
     // Pantalla del título de la práctica
-    gsap.fromTo(".practica__num", { yPercent: 30, rotate: -6 }, { yPercent: -20, rotate: 0, ease: "none", scrollTrigger: { trigger: ".practica", start: "top bottom", end: "bottom top", scrub: true } });
+    gsap.fromTo(".nube", { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 1.4, ease: "expo.out", scrollTrigger: { trigger: ".practica", start: "top 70%" } });
     gsap.fromTo(".practica__regla span", { scaleX: 0 }, { scaleX: 1, ease: "none", scrollTrigger: { trigger: ".practica", start: "top 60%", end: "bottom 40%", scrub: 1 } });
 
     // 01 · caída de la regla
@@ -333,6 +454,13 @@
         .to("#pantalla-balanza", { fill: "#ff5a1f", duration: 0.25 }, "<")
         .to({}, { duration: 0.5 });
     }
+    // ...y además nunca se quedan quietas
+    if (lector) gsap.to($$("path", lector), { x: 9, duration: 1.3, ease: "sine.inOut", yoyo: true, repeat: -1 });
+    if (corredera) gsap.to($$(":scope > path", corredera), { x: 7, duration: 1.7, ease: "sine.inOut", yoyo: true, repeat: -1 });
+    if (objeto) {
+      gsap.to($$("rect", objeto), { y: -2.5, duration: 0.9, ease: "sine.inOut", yoyo: true, repeat: -1 });
+      gsap.to("#pantalla-balanza", { opacity: 0.35, duration: 0.7, ease: "sine.inOut", yoyo: true, repeat: -1 });
+    }
 
     // 03 · sólidos
     const solidos = $(".solidos");
@@ -360,10 +488,7 @@
         .to($$("[data-cota]", solidos), { opacity: 0.15, duration: 0.3 }, 0)
         .to($$(".solido svg", solidos), { y: 0, duration: 0.6, ease: "bounce.out", stagger: 0.08 })
         .to($$("[data-cota]", solidos), { opacity: 1, duration: 0.4 }, "-=0.3");
-      ScrollTrigger.create({
-        trigger: solidos, start: "top 70%", end: "bottom 10%",
-        onToggle: (s) => (s.isActive ? gsap.delayedCall(2.4, () => repetir.play()) : repetir.pause()),
-      });
+      enPantalla(solidos, () => repetir.play(), () => repetir.pause(), 0.2);
     }
 
     // 04 · propagación
@@ -377,6 +502,11 @@
       tl.fromTo($$(".barra-error--calc path", propaga), { attr: { transform: "scale(0 1)" } }, { attr: { transform: "scale(1 1)" }, duration: 1, ease: "elastic.out(1, 0.5)", stagger: 0.25 }, 1.6);
       tl.add(() => {
         gsap.to($$(".barra-error--calc path", propaga), { attr: { transform: "scale(1.22 1)" }, duration: 1.4, ease: "sine.inOut", yoyo: true, repeat: -1, stagger: 0.3 });
+        gsap.to($$(".barra-error:not(.barra-error--calc) path", propaga), { attr: { transform: "scale(1.12 1)" }, duration: 1.1, ease: "sine.inOut", yoyo: true, repeat: -1, stagger: 0.2 });
+        // la duda "fluye" por los hilos hacia los resultados
+        const hilos = $$(".propaga__hilo", propaga);
+        hilos.forEach((h) => { h.style.strokeDasharray = "5 7"; });
+        gsap.fromTo(hilos, { strokeDashoffset: 0 }, { strokeDashoffset: -24, duration: 0.9, ease: "none", repeat: -1 });
       });
     }
 
@@ -392,7 +522,7 @@
         .fromTo(palabras, { yPercent: 70, opacity: 0, rotate: 4 }, { yPercent: 0, opacity: 1, rotate: 0, duration: 1, stagger: 0.18, ease: "power3.out" })
         .to(curva, { strokeDashoffset: 0, duration: 1.4, ease: "power2.inOut" }, "-=0.2")
         .fromTo(banda, { opacity: 0, attr: { transform: "translate(300 0) scale(0 1) translate(-300 0)" } }, { opacity: 1, attr: { transform: "translate(300 0) scale(1 1) translate(-300 0)" }, duration: 1, ease: "power3.out" }, "-=0.5")
-        .fromTo(".idea .campana__txt, .idea .campana__centro", { opacity: 0 }, { opacity: 1, duration: 0.6 }, "<")
+        .fromTo(".idea .campana__txt, .idea .campana__centro, #campana-gotas", { opacity: 0 }, { opacity: 1, duration: 0.6 }, "<")
         .fromTo(".idea__texto", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8 }, "-=0.4")
         .fromTo(".factor", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: "power3.out" }, "-=0.4");
     };
@@ -407,6 +537,8 @@
 
     // Recalcular al cargar las fuentes (cambian alturas)
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
+    window.addEventListener("load", () => ScrollTrigger.refresh());
+    C.alListo(() => setTimeout(() => ScrollTrigger.refresh(), 120));
   };
 
   /* =======================================================
@@ -416,6 +548,8 @@
   marcarInstrumentos();
   iniciarVernier();
   iniciarCaida();
+  iniciarNube();
+  iniciarGotas();
   iniciarIndice();
   if (animar) animaciones();
 })();
