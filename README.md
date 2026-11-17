@@ -35,7 +35,7 @@ Cada práctica vive en su propia carpeta y tiene su propio enlace (`/practica-N/
 4. En `index.html` (raíz), convertir el elemento «Práctica 2 · Próximamente» en un enlace a `practica-2/`, igual que el de la Práctica 1.
 5. En el pie de cada práctica, actualizar la lista de prácticas para enlazar la nueva.
 
-GitHub Pages publica los cambios automáticamente al subirlos a la rama `main`.
+GitHub Pages publica los cambios automáticamente al subirlos a la rama `main`. Al cambiar un `.css` o `.js`, sube el número `?v=` con que se enlaza en el HTML para que los navegadores no usen la versión vieja guardada.
 
 ## Tecnología
 

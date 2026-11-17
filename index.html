@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/comun.css">
+  <link rel="stylesheet" href="assets/css/comun.css?v=4">
 
   <style>
     .inicio {
@@ -135,14 +135,14 @@
       h.classList.add("js");
       try { if (sessionStorage.getItem("telon") === "1") h.classList.add("telon-entrada"); } catch (e) {}
       setTimeout(function () {
-        if (!h.classList.contains("listo")) { h.classList.remove("js"); h.classList.remove("telon-entrada"); }
-      }, 5000);
+        if (!h.classList.contains("listo")) { h.classList.remove("js"); h.classList.remove("telon-entrada"); var t = document.querySelector(".telon"); if (t) t.style.display = "none"; }
+      }, 4000);
     })();
   </script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script defer src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
-  <script defer src="assets/js/comun.js"></script>
+  <script defer src="assets/js/comun.js?v=4"></script>
 </head>
 <body>
   <div class="grano" aria-hidden="true"></div>

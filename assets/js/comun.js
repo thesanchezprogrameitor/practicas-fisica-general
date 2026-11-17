@@ -120,19 +120,22 @@
   };
 
   if (telon && hasGsap && !reduce) {
+    // GSAP controla el telón solo con yPercent. Se fija y: 0 para que no
+    // herede el translateY(100%) del CSS como píxeles (eso lo dejaba tapando).
+    gsap.set(telon, { y: 0, yPercent: vieneDeTransicion ? 0 : 100 });
     document.addEventListener("click", (e) => {
       const a = e.target.closest("a");
       if (!esEnlaceInterno(a) || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
       e.preventDefault();
       guardar.escribir("telon", "1");
-      gsap.fromTo(telon, { yPercent: 100 }, {
+      gsap.fromTo(telon, { y: 0, yPercent: 100 }, {
         yPercent: 0, duration: 0.7, ease: "power4.inOut",
         onComplete: () => { location.href = a.href; },
       });
     });
     // Al volver con el botón "atrás" (bfcache) el telón debe quedar fuera.
     window.addEventListener("pageshow", (e) => {
-      if (e.persisted) gsap.set(telon, { yPercent: 100 });
+      if (e.persisted) gsap.set(telon, { y: 0, yPercent: 100 });
     });
   }
 
@@ -144,10 +147,12 @@
     // Llegamos desde otra página: se recoge el telón en lugar de la carga.
     if (carga) carga.remove();
     html.classList.remove("telon-entrada");
-    gsap.fromTo(telon, { yPercent: 0 }, {
+    gsap.fromTo(telon, { y: 0, yPercent: 0 }, {
       yPercent: -100, duration: 0.8, ease: "power4.inOut", delay: 0.1,
-      onStart: () => setTimeout(marcarListo, 250),
+      // queda abajo, listo para la próxima salida
+      onComplete: () => gsap.set(telon, { yPercent: 100 }),
     });
+    setTimeout(marcarListo, 350);
   } else if (animar && carga && guardar.leer("visto") !== "1") {
     guardar.escribir("visto", "1");
     const num = carga.querySelector(".carga__num b");
