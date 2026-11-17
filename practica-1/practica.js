@@ -1,6 +1,6 @@
 /* =========================================================
    Práctica 1 · Error e incertidumbre
-   Escala Vernier de la portada, reto de reacción con la regla,
+   Escala Vernier de la portada, animación de la regla que cae,
    dibujos que se trazan al hacer scroll y animaciones.
    ========================================================= */
 (() => {
@@ -99,149 +99,92 @@
   };
 
   /* =======================================================
-     Reto: atrapa la regla
+     Tiempo de reacción: animación automática
+     Una persona suelta la regla y la otra la atrapa.
+     Se reproduce sola mientras está en pantalla.
      ======================================================= */
-  const iniciarReto = () => {
-    const raiz = $("#reto");
+  const iniciarCaida = () => {
+    const raiz = $("#caida");
     if (!raiz) return;
-    const escena = $("#reto-escena"), regla = $("#reto-regla"), boton = $("#reto-boton");
-    const estado = $("#reto-estado"), resultado = $("#reto-resultado");
-    const pista = $("#reto-pista"), nota = $("#reto-nota");
+    const regla = $("#caida-regla"), marcas = $("#caida-marcas"), cota = $("#caida-cota");
+    const dedosA = $$("#dedos-a .dedo"), dedosB = $$("#dedos-b .dedo");
+    const cotaLinea = $("#cota-linea"), cotaFin = $("#cota-fin"), cotaTxt = $("#cota-txt");
+    const estado = $("#caida-estado"), lectura = $("#caida-lectura"), pista = $("#caida-pista");
 
-    const G = 9.81, LARGO = 30; // m/s², cm
-    const MIN = 100, MAX = 350; // escala del historial en ms
-    let cm = 16, dedos = 300, fase = "inactivo", inicio = 0, espera = null, cuadro = null;
-    let caida = 0, bloqueo = 0;
-    const tiempos = [];
+    const PX = 8, CERO = 310, G = 9.81, LENTA = 4; // px por cm, línea del cero, m/s², cámara lenta
+    const intentos = [17.6, 14.1, 20.3, 12.9, 15.8, 13.4]; // cm (ilustrativos)
+    const esperas = [1.0, 1.7, 0.8, 1.4, 2.0, 1.1]; // s: la regla se suelta sin aviso
+    const MIN = 140, MAX = 220; // ms, escala de la pista
 
-    // Números de la regla (0 abajo, 30 arriba)
-    for (let i = 0; i <= LARGO; i++) {
-      const s = document.createElement("span");
-      s.textContent = i;
-      s.dataset.cm = i;
-      regla.appendChild(s);
+    for (let i = 0; i <= 30; i++) {
+      const y = CERO - i * PX;
+      const largo = i % 10 === 0 ? 10 : i % 5 === 0 ? 8 : 4;
+      nodoSvg("line", { x1: 251, x2: 251 + largo, y1: y, y2: y }, marcas);
+      if (i % 5 === 0 && i > 0) nodoSvg("text", { x: 267.5, y: y + 2.3 }, marcas).textContent = i;
     }
 
-    const colocar = () => { regla.style.transform = `translate3d(0, ${(caida * cm).toFixed(2)}px, 0)`; };
-
-    const medir = () => {
-      const alto = escena.clientHeight;
-      dedos = Math.round(alto * 0.62);
-      cm = Math.max(13, Math.min(24, alto / 19));
-      escena.style.setProperty("--dedos", `${dedos}px`);
-      regla.style.setProperty("--cm", `${cm}px`);
-      regla.style.height = `${LARGO * cm}px`;
-      regla.style.top = `${dedos - LARGO * cm}px`;
-      $$("span", regla).forEach((s) => { s.style.bottom = `${s.dataset.cm * cm}px`; });
-      colocar();
+    const ms = (d) => Math.round(Math.sqrt((2 * d) / 100 / G) * 1000);
+    const texto = (n, d) => `Intento ${n}: la regla alcanzó a caer <b>${coma(d)} cm</b> antes de que la mano se cerrara. Eso equivale a unos <b>${ms(d)} ms</b> de reacción.`;
+    const ponerCota = (d) => {
+      const y = CERO + d * PX;
+      cotaLinea.setAttribute("y2", y);
+      cotaFin.setAttribute("y1", y);
+      cotaFin.setAttribute("y2", y);
+      cotaTxt.setAttribute("y", CERO + (d * PX) / 2 + 6);
     };
-    medir();
-    if ("ResizeObserver" in window) new ResizeObserver(medir).observe(escena);
-
-    const ponerEstado = (t) => { estado.textContent = t; };
-
-    const preparar = () => {
-      if (performance.now() < bloqueo) return;
-      clearTimeout(espera); cancelAnimationFrame(cuadro);
-      raiz.classList.remove("cerrado");
-      resultado.innerHTML = "";
-      fase = "esperando";
-      boton.disabled = true;
-      boton.textContent = "Atento…";
-      ponerEstado("Atento… puede caer en cualquier momento");
-      const volver = () => { caida = 0; colocar(); };
-      // Si se escapó, la regla vuelve a entrar desde arriba.
-      if (caida > LARGO) { caida = -(dedos / cm) - 2; colocar(); }
-      if (animar && caida !== 0) gsap.to({ v: caida }, { v: 0, duration: 0.5, ease: "power3.out", onUpdate() { caida = this.targets()[0].v; colocar(); } });
-      else volver();
-      espera = setTimeout(soltar, 1300 + Math.random() * 2400);
+    const punto = (d) => {
+      $$("i", pista).forEach((p) => p.classList.remove("ultimo"));
+      const p = document.createElement("i");
+      p.className = "ultimo";
+      p.style.left = `${Math.max(0, Math.min(1, (ms(d) - MIN) / (MAX - MIN))) * 100}%`;
+      pista.appendChild(p);
     };
+    const limpiar = () => { $$("i", pista).forEach((p) => pista.removeChild(p)); };
 
-    const soltar = () => {
-      fase = "cayendo";
-      caida = 0;
-      inicio = performance.now();
-      const caer = () => {
-        const t = (performance.now() - inicio) / 1000;
-        caida = 0.5 * G * t * t * 100;
-        colocar();
-        if (fase === "cayendo" && caida > LARGO) escapar();
-        if (caida * cm < escena.clientHeight + LARGO * cm && (fase === "cayendo" || fase === "escapo")) {
-          cuadro = requestAnimationFrame(caer);
-        }
-      };
-      cuadro = requestAnimationFrame(caer);
-    };
+    if (!animar) {
+      const d = intentos[0];
+      regla.setAttribute("transform", `translate(0 ${d * PX})`);
+      dedosB[0].setAttribute("transform", "translate(6 0)");
+      dedosB[1].setAttribute("transform", "translate(-6 0)");
+      ponerCota(d);
+      estado.textContent = "¡Atrapada!";
+      lectura.innerHTML = texto(1, d);
+      intentos.forEach(punto);
+      return;
+    }
 
-    const terminar = () => {
-      boton.disabled = false;
-      boton.textContent = "Otra vez";
-      bloqueo = performance.now() + 450;
-    };
+    gsap.set(cota, { opacity: 0 });
+    const tl = gsap.timeline({ repeat: -1, paused: true, onRepeat: limpiar });
+    intentos.forEach((d, i) => {
+      const t = Math.sqrt((2 * d) / 100 / G) * LENTA;
+      tl.call(() => { estado.textContent = "Sostiene la regla…"; })
+        .to({}, { duration: esperas[i] })
+        .call(() => { estado.textContent = "¡La suelta!"; })
+        .to(dedosA[0], { x: -8, duration: 0.12, ease: "power2.out" })
+        .to(dedosA[1], { x: 8, duration: 0.12, ease: "power2.out" }, "<")
+        // caída libre: la distancia crece con el cuadrado del tiempo
+        .to(regla, { y: d * PX, duration: t, ease: "power2.in" }, "<")
+        .to(dedosB[0], { x: 6, duration: 0.08, ease: "power3.out" }, ">-0.05")
+        .to(dedosB[1], { x: -6, duration: 0.08, ease: "power3.out" }, "<")
+        .call(() => {
+          estado.textContent = "¡Atrapada!";
+          ponerCota(d);
+          lectura.innerHTML = texto(i + 1, d);
+          punto(d);
+        })
+        .fromTo(cota, { opacity: 0 }, { opacity: 1, duration: 0.3 })
+        .to({}, { duration: 2 })
+        .to(cota, { opacity: 0, duration: 0.3 })
+        .to(dedosB, { x: 0, duration: 0.3 }, "<")
+        .to(regla, { y: 0, duration: 0.8, ease: "power2.inOut" }, "<0.1")
+        .to(dedosA, { x: 0, duration: 0.2 }, ">-0.1");
+    });
 
-    const atrapar = () => {
-      const t = (performance.now() - inicio) / 1000;
-      cancelAnimationFrame(cuadro);
-      caida = Math.min(LARGO, 0.5 * G * t * t * 100);
-      colocar();
-      fase = "atrapada";
-      raiz.classList.add("cerrado");
-      const ms = Math.round(t * 1000);
-      resultado.innerHTML = `<small>Atrapada a</small><b>${coma(caida)} cm</b><small>≈ ${ms} ms de reacción</small>`;
-      ponerEstado("¡Atrapada!");
-      registrar(ms);
-      terminar();
-    };
-
-    const escapar = () => {
-      fase = "escapo";
-      raiz.classList.add("cerrado");
-      resultado.innerHTML = `Se te escapó<small>Cayó más de ${LARGO} cm</small>`;
-      ponerEstado("Se escapó");
-      terminar();
-    };
-
-    const adelantado = () => {
-      clearTimeout(espera);
-      fase = "inactivo";
-      raiz.classList.add("cerrado");
-      resultado.innerHTML = `¡Te adelantaste!<small>Espera a que la regla caiga</small>`;
-      ponerEstado("Demasiado pronto");
-      terminar();
-    };
-
-    const registrar = (ms) => {
-      tiempos.push(ms);
-      if (tiempos.length > 12) tiempos.shift();
-      pista.innerHTML = `<em style="left:0">${MIN} ms</em><em style="right:0">${MAX} ms</em>`;
-      tiempos.forEach((v, i) => {
-        const p = Math.max(0, Math.min(1, (v - MIN) / (MAX - MIN))) * 100;
-        const punto = document.createElement("i");
-        punto.style.left = `${p}%`;
-        if (i === tiempos.length - 1) punto.className = "ultimo";
-        pista.appendChild(punto);
-      });
-      if (tiempos.length === 1) {
-        nota.textContent = "Primer intento registrado. Hazlo otra vez y compara: el tiempo cambiará.";
-      } else {
-        const rango = Math.max(...tiempos) - Math.min(...tiempos);
-        nota.textContent = `Llevas ${tiempos.length} intentos. Entre el más rápido y el más lento hay ${rango} ms de diferencia: nadie reacciona igual dos veces.`;
-      }
-    };
-
-    const accion = () => {
-      if (fase === "esperando") adelantado();
-      else if (fase === "cayendo") atrapar();
-      else preparar();
-    };
-
-    boton.addEventListener("click", () => { if (fase !== "esperando" && fase !== "cayendo") preparar(); });
-    escena.addEventListener("pointerdown", (e) => { e.preventDefault(); accion(); });
-    window.addEventListener("keydown", (e) => {
-      if ((e.code === "Space" || e.key === " ") && (fase === "esperando" || fase === "cayendo")) {
-        e.preventDefault();
-        accion();
-      }
+    ScrollTrigger.create({
+      trigger: raiz,
+      start: "top 85%",
+      end: "bottom 15%",
+      onToggle: (s) => (s.isActive ? tl.play() : tl.pause()),
     });
   };
 
@@ -321,7 +264,7 @@
     gsap.set(".portada__pm", { yPercent: -55, y: 0 });
     C.alListo(() => {
       const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
-      tl.fromTo(".portada__titulo .linea > span", { yPercent: 110, y: 0 }, { yPercent: 0, duration: 1.5, stagger: 0.1 })
+      tl.fromTo(".portada__nombre .linea > span", { yPercent: 110, y: 0 }, { yPercent: 0, duration: 1.5, stagger: 0.1 })
         .fromTo(".portada [data-entra]", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 1.2, stagger: 0.07 }, 0.2)
         .fromTo(".portada__pm", { opacity: 0, scale: 0.8, rotate: -12 }, { opacity: 1, scale: 1, rotate: 0, duration: 2.4 }, 0)
         .fromTo(".portada__rejilla", { opacity: 0 }, { opacity: 1, duration: 2 }, 0);
@@ -338,7 +281,7 @@
     });
 
     // Titulares por líneas
-    $$(".hicimos__titulo, .pie__frase").forEach((t) => {
+    $$(".practica__titulo, .hicimos__titulo, .pie__frase").forEach((t) => {
       gsap.fromTo($$(".linea > span", t), { yPercent: 110, y: 0 }, {
         yPercent: 0, duration: 1.4, ease: "expo.out", stagger: 0.12,
         scrollTrigger: { trigger: t, start: "top 82%" },
@@ -360,8 +303,12 @@
       gsap.fromTo(n, { yPercent: 25 }, { yPercent: -25, ease: "none", scrollTrigger: { trigger: n.closest(".cap"), start: "top bottom", end: "bottom top", scrub: true } });
     });
 
-    // 01 · reto
-    gsap.from(".reto", { y: 60, opacity: 0, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".reto", start: "top 85%" } });
+    // Pantalla del título de la práctica
+    gsap.fromTo(".practica__num", { yPercent: 30, rotate: -6 }, { yPercent: -20, rotate: 0, ease: "none", scrollTrigger: { trigger: ".practica", start: "top bottom", end: "bottom top", scrub: true } });
+    gsap.fromTo(".practica__regla span", { scaleX: 0 }, { scaleX: 1, ease: "none", scrollTrigger: { trigger: ".practica", start: "top 60%", end: "bottom 40%", scrub: 1 } });
+
+    // 01 · caída de la regla
+    gsap.from(".caida", { y: 60, opacity: 0, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".caida", start: "top 85%" } });
 
     // 02 · instrumentos
     $$(".instrumento").forEach((li) => {
@@ -372,6 +319,21 @@
       tl.from($$(".instrumento__marcas line", svg), { scaleY: 0, transformOrigin: "50% 0%", duration: 0.5, stagger: 0.01, ease: "power2.out" }, 0.6);
     });
 
+    // Piezas que se mueven con el scroll (sin pasar el ratón por encima)
+    const conScroll = (el) => ({ trigger: el.closest(".instrumento"), start: "top 90%", end: "bottom 20%", scrub: 1 });
+    const lector = $("#lector-regla");
+    if (lector) gsap.fromTo(lector, { x: 0 }, { x: 208, ease: "none", scrollTrigger: conScroll(lector) });
+    const corredera = $(".instrumento__corredera");
+    if (corredera) gsap.fromTo(corredera, { x: -54 }, { x: 70, ease: "none", scrollTrigger: conScroll(corredera) });
+    const objeto = $("#objeto-balanza");
+    if (objeto) {
+      gsap.timeline({ scrollTrigger: conScroll(objeto) })
+        .fromTo(objeto, { y: -46, opacity: 0 }, { y: 0, opacity: 1, duration: 1, ease: "power2.in" })
+        .to(["#plato-balanza", objeto], { y: "+=3", duration: 0.25, ease: "power2.out" })
+        .to("#pantalla-balanza", { fill: "#ff5a1f", duration: 0.25 }, "<")
+        .to({}, { duration: 0.5 });
+    }
+
     // 03 · sólidos
     const solidos = $(".solidos");
     if (solidos) {
@@ -381,6 +343,13 @@
         if (tr) tl.add(tr, i * 0.25);
       });
       tl.fromTo($$("[data-cota]", solidos), { opacity: 0 }, { opacity: 1, duration: 0.8, stagger: 0.15 }, 1.4);
+
+      // Cada cuerpo se desplaza a su ritmo mientras se hace scroll
+      const desfase = [26, 44, 18];
+      gsap.fromTo($$(".solido", solidos), { y: (i) => desfase[i] }, {
+        y: (i) => -desfase[i], ease: "none",
+        scrollTrigger: { trigger: solidos, start: "top bottom", end: "bottom top", scrub: 1 },
+      });
 
       // Retirar el cuerpo y volver a medir
       const n = $("#lecturas-n");
@@ -446,7 +415,7 @@
   dibujarCampana();
   marcarInstrumentos();
   iniciarVernier();
-  iniciarReto();
+  iniciarCaida();
   iniciarIndice();
   if (animar) animaciones();
 })();

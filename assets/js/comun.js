@@ -94,8 +94,8 @@
       cursor.classList.toggle("sobre", !!sobre);
     });
     const mover = () => {
-      cx += (x - cx) * 0.2;
-      cy += (y - cy) * 0.2;
+      cx += (x - cx) * 0.35;
+      cy += (y - cy) * 0.35;
       cursor.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
       if (coord) coord.textContent = `x ${Math.round(x)} ± 1   y ${Math.round(y + window.scrollY)} ± 1`;
       requestAnimationFrame(mover);

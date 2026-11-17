@@ -1,6 +1,6 @@
 # Prácticas de laboratorio · Física General (UNAD)
 
-Páginas de presentación de las prácticas de laboratorio del curso **Física General (100413)** de la Universidad Nacional Abierta y a Distancia (UNAD), 2026. Presentadas por el estudiante **Leonardo Sánchez**.
+Páginas de presentación de las prácticas de laboratorio del curso **Física General (100413)** de la Universidad Nacional Abierta y a Distancia (UNAD), 2026. Un proyecto traído por el estudiante **Leonardo Sánchez**.
 
 ## Enlaces
 
