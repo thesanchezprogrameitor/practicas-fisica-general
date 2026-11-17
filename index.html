@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prácticas de laboratorio · Física General UNAD</title>
+  <meta name="description" content="Prácticas de laboratorio de Física General (100413), UNAD 2026. Presentadas por el estudiante Leonardo Sánchez.">
+  <meta name="author" content="Leonardo Sánchez">
+  <meta name="theme-color" content="#0b0c0e">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230b0c0e'/><text x='32' y='46' font-family='Georgia,serif' font-size='42' text-anchor='middle' fill='%23ff5a1f'>±</text></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/comun.css">
+
+  <style>
+    .inicio {
+      position: relative;
+      min-height: 100vh;
+      min-height: 100svh;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 3rem;
+      padding: calc(var(--gutter) + 56px) var(--gutter) var(--gutter);
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .inicio::before {
+      content: "";
+      position: absolute; inset: 0; z-index: -1;
+      background-image:
+        linear-gradient(var(--linea) 1px, transparent 1px),
+        linear-gradient(90deg, var(--linea) 1px, transparent 1px);
+      background-size: 96px 96px;
+      -webkit-mask-image: radial-gradient(ellipse 70% 60% at 70% 20%, #000 20%, transparent 75%);
+      mask-image: radial-gradient(ellipse 70% 60% at 70% 20%, #000 20%, transparent 75%);
+    }
+    .inicio__meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.6rem 2rem; color: var(--papel-2); padding-bottom: 1.2rem; border-bottom: 1px solid var(--linea); }
+    .inicio__titulo {
+      align-self: end;
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(3.4rem, 12vw, 12rem);
+      line-height: 0.88;
+      letter-spacing: -0.025em;
+    }
+    .inicio__titulo em { color: var(--acento); }
+    .inicio__autor { margin-top: 1.6rem; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.4rem 1rem; }
+    .inicio__autor .mono { color: var(--papel-3); }
+    .inicio__autor strong { font-family: var(--serif); font-weight: 400; font-size: clamp(1.6rem, 3vw, 2.6rem); }
+
+    .lista { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--linea-fuerte); }
+    .item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 5rem 1fr auto;
+      align-items: center;
+      gap: 1rem 2rem;
+      padding: clamp(1.2rem, 3vh, 2rem) 0;
+      border-bottom: 1px solid var(--linea-fuerte);
+      text-decoration: none;
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .item::before {
+      content: "";
+      position: absolute; inset: 0; z-index: -1;
+      background: var(--acento);
+      transform: scaleY(0);
+      transform-origin: bottom;
+      transition: transform 0.6s var(--ease);
+    }
+    a.item:hover::before, a.item:focus-visible::before { transform: scaleY(1); }
+    a.item:hover, a.item:focus-visible { color: var(--tinta); }
+    .item b { font: 400 0.8rem var(--mono); letter-spacing: 0.1em; padding-left: 0.2rem; transition: padding 0.6s var(--ease); }
+    a.item:hover b { padding-left: 1.2rem; }
+    .item span { font-family: var(--serif); font-size: clamp(1.6rem, 3.6vw, 3.4rem); line-height: 1.05; }
+    .item i { font-style: normal; padding-right: 0.2rem; transition: padding 0.6s var(--ease); }
+    a.item:hover i { padding-right: 1.2rem; }
+    .item--pronto { color: var(--papel-3); }
+    .item--pronto span { opacity: 0.5; }
+    @media (max-width: 640px) {
+      .item { grid-template-columns: 2.6rem 1fr; }
+      .item i { grid-column: 2; }
+    }
+    .js .inicio [data-entra] { opacity: 0; }
+  </style>
+
+  <script>
+    (function () {
+      var h = document.documentElement;
+      h.classList.add("js");
+      try { if (sessionStorage.getItem("telon") === "1") h.classList.add("telon-entrada"); } catch (e) {}
+      setTimeout(function () {
+        if (!h.classList.contains("listo")) { h.classList.remove("js"); h.classList.remove("telon-entrada"); }
+      }, 5000);
+    })();
+  </script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script defer src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script defer src="assets/js/comun.js"></script>
+</head>
+<body>
+  <div class="grano" aria-hidden="true"></div>
+  <div class="telon" aria-hidden="true"></div>
+  <div class="cursor" aria-hidden="true"><span class="cursor__aro"></span><span class="cursor__coord"></span></div>
+
+  <header class="barra">
+    <span class="barra__marca"><i class="barra__punto"></i><b>UNAD</b><span>· Física General</span></span>
+    <span>2026</span>
+  </header>
+
+  <main class="inicio">
+    <div class="inicio__meta mono" data-entra>
+      <span>Universidad Nacional Abierta y a Distancia (UNAD)</span>
+      <span>Física General · 100413</span>
+    </div>
+
+    <div>
+      <h1 class="inicio__titulo" data-entra>Prácticas de <em>laboratorio</em></h1>
+      <p class="inicio__autor" data-entra><span class="mono">Presentadas por el estudiante</span><strong>Leonardo Sánchez</strong></p>
+    </div>
+
+    <ol class="lista" aria-label="Prácticas">
+      <li data-entra>
+        <a class="item" href="practica-1/">
+          <b>01</b><span>Error e incertidumbre en mediciones directas e indirectas</span><i class="mono">Ver práctica →</i>
+        </a>
+      </li>
+      <li data-entra>
+        <div class="item item--pronto"><b>02</b><span>Práctica 2</span><i class="mono">Próximamente</i></div>
+      </li>
+      <li data-entra>
+        <div class="item item--pronto"><b>03</b><span>Práctica 3</span><i class="mono">Próximamente</i></div>
+      </li>
+    </ol>
+  </main>
+
+  <script>
+    window.addEventListener("DOMContentLoaded", function () {
+      var C = window.Comun;
+      if (!C || !C.animar) return;
+      C.alListo(function () {
+        gsap.fromTo(".inicio [data-entra]", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1.2, ease: "expo.out", stagger: 0.09 });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Práctica 1 · Error e incertidumbre | Física General UNAD</title>
+  <meta name="description" content="Práctica 1 de Física General (100413), UNAD 2026: error e incertidumbre en mediciones directas e indirectas. Presentada por el estudiante Leonardo Sánchez.">
+  <meta name="author" content="Leonardo Sánchez">
+  <meta name="theme-color" content="#0b0c0e">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_CO">
+  <meta property="og:title" content="Práctica 1 · Error e incertidumbre en mediciones directas e indirectas">
+  <meta property="og:description" content="Física General (100413) · UNAD 2026 · Presentada por el estudiante Leonardo Sánchez.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230b0c0e'/><text x='32' y='46' font-family='Georgia,serif' font-size='42' text-anchor='middle' fill='%23ff5a1f'>±</text></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../assets/css/comun.css">
+  <link rel="stylesheet" href="practica.css">
+
+  <script>
+    (function () {
+      var h = document.documentElement;
+      h.classList.add("js");
+      try { if (sessionStorage.getItem("telon") === "1") h.classList.add("telon-entrada"); } catch (e) {}
+      setTimeout(function () {
+        if (!h.classList.contains("listo")) { h.classList.remove("js"); h.classList.remove("telon-entrada"); }
+      }, 5000);
+    })();
+  </script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script defer src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script defer src="../assets/js/comun.js"></script>
+  <script defer src="practica.js"></script>
+</head>
+<body>
+  <a class="sr-only" href="#lo-que-hicimos">Saltar a «Lo que hicimos»</a>
+
+  <div class="grano" aria-hidden="true"></div>
+  <div class="telon" aria-hidden="true"></div>
+  <div class="cursor" aria-hidden="true"><span class="cursor__aro"></span><span class="cursor__coord"></span></div>
+
+  <div class="carga" aria-hidden="true">
+    <div class="carga__fila">
+      <span class="carga__texto">Calibrando instrumentos…</span>
+      <span class="carga__num"><b>000</b><small>%</small></span>
+    </div>
+    <div class="carga__barra"><span></span></div>
+  </div>
+
+  <div class="progreso" aria-hidden="true"><span></span></div>
+
+  <header class="barra">
+    <a class="barra__marca" href="../"><i class="barra__punto"></i><b>UNAD</b><span>· Física General</span></a>
+    <nav class="barra__nav" aria-label="Secciones">
+      <a href="#portada" class="ocultar-movil">Portada</a>
+      <a href="#lo-que-hicimos">Lo que hicimos</a>
+      <a href="../">Prácticas</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- =====================================================
+         1. PORTADA
+         ===================================================== -->
+    <section id="portada" class="portada">
+      <div class="portada__rejilla" aria-hidden="true"></div>
+      <div class="portada__pm" aria-hidden="true">±</div>
+
+      <div class="portada__meta">
+        <p class="mono" data-entra><span class="portada__meta-k">Universidad</span>Universidad Nacional Abierta y a Distancia (UNAD)</p>
+        <p class="mono" data-entra><span class="portada__meta-k">Curso</span>Física General · 100413</p>
+        <p class="mono" data-entra><span class="portada__meta-k">Año</span>2026</p>
+      </div>
+
+      <div class="portada__centro">
+        <p class="portada__ceja" data-entra>
+          <span>Reto 2</span><i></i><span>Componente Práctico</span><i></i><span>Sesión 1</span>
+        </p>
+        <h1 class="portada__titulo">
+          <span class="portada__num" data-entra>Práctica <em>1</em></span>
+          <span class="linea"><span>Error e</span></span>
+          <span class="linea"><span>incertidumbre</span></span>
+          <span class="linea linea--it"><span>en mediciones directas e indirectas</span></span>
+        </h1>
+      </div>
+
+      <div class="portada__pie">
+        <div class="portada__autor" data-entra>
+          <span class="mono">Una práctica presentada por el estudiante</span>
+          <strong>Leonardo Sánchez</strong>
+        </div>
+        <a class="portada__bajar" href="#lo-que-hicimos" data-entra>
+          <span class="mono">Desliza para ver lo que hicimos</span>
+          <span class="portada__flecha" aria-hidden="true"><i></i></span>
+        </a>
+      </div>
+
+      <div class="vernier" aria-hidden="true" data-entra>
+        <svg id="vernier" preserveAspectRatio="xMidYMid slice"></svg>
+        <p class="vernier__lectura mono">Lectura <b id="lectura">0,0</b> mm <span>± 0,1</span></p>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         2. LO QUE HICIMOS
+         ===================================================== -->
+    <section id="lo-que-hicimos" class="hicimos">
+      <header class="hicimos__cab">
+        <p class="etiqueta" data-revela>Sección 02</p>
+        <h2 class="hicimos__titulo"><span class="linea"><span>Lo que</span></span> <span class="linea"><span><em>hicimos</em></span></span></h2>
+        <p class="hicimos__manifiesto" data-palabras>
+          Pasamos una sesión de laboratorio midiendo cosas sencillas: una regla que cae, un par de cilindros, una esfera. Detrás de cada medida apareció la misma lección. Ningún número sale perfecto, y saber cuánto puede fallar vale tanto como el número mismo.
+        </p>
+      </header>
+
+      <nav class="indice-cap" aria-label="Actividades">
+        <a href="#cap-1"><b>01</b><span>Tiempo de reacción</span></a>
+        <a href="#cap-2"><b>02</b><span>Los instrumentos</span></a>
+        <a href="#cap-3"><b>03</b><span>Cuerpos sólidos</span></a>
+        <a href="#cap-4"><b>04</b><span>Medidas y resultados</span></a>
+        <a href="#cap-5"><b>05</b><span>La idea central</span></a>
+      </nav>
+
+      <!-- ---------- 01 · Tiempo de reacción ---------- -->
+      <article class="cap" id="cap-1">
+        <div class="cap__texto">
+          <span class="cap__num" aria-hidden="true">01</span>
+          <p class="etiqueta" data-revela>Tiempo de reacción con una regla</p>
+          <h3 class="cap__titulo" data-revela>Una regla que se convierte en <em>cronómetro</em></h3>
+          <p data-revela>Un compañero sostenía una regla en vertical y otro ponía los dedos abiertos a la altura del cero, sin tocarla. En cualquier momento, sin aviso, la regla se soltaba y había que atraparla lo más rápido posible.</p>
+          <p data-revela>La clave estaba en cuánto alcanzaba a caer. Como la regla cae libremente por efecto de la gravedad, la distancia recorrida dice cuánto tiempo pasó antes de cerrar los dedos: más centímetros, más tiempo. Así medimos algo tan escurridizo como un reflejo usando solo una regla.</p>
+          <p data-revela>Participamos cuatro personas, con veinte intentos cada una. Nadie reaccionó igual dos veces, y con la práctica algunos se fueron volviendo más rápidos.</p>
+        </div>
+
+        <div class="cap__visual">
+          <div class="reto" id="reto" data-cursor>
+            <div class="reto__cab">
+              <span class="mono">Pruébalo tú</span>
+              <span class="mono reto__estado" id="reto-estado" aria-live="polite">Pulsa «Preparar»</span>
+            </div>
+            <div class="reto__escena" id="reto-escena">
+              <div class="reto__regla" id="reto-regla"></div>
+              <div class="reto__dedo reto__dedo--izq" aria-hidden="true"></div>
+              <div class="reto__dedo reto__dedo--der" aria-hidden="true"></div>
+              <div class="reto__marca" aria-hidden="true"></div>
+              <div class="reto__resultado" id="reto-resultado" aria-live="polite"></div>
+            </div>
+            <div class="reto__pie">
+              <button class="reto__boton" id="reto-boton" type="button">Preparar</button>
+              <p class="reto__ayuda">Cuando caiga, haz clic, toca la escena o pulsa la barra espaciadora.</p>
+            </div>
+            <div class="reto__historial">
+              <div class="reto__pista" id="reto-pista" aria-hidden="true"></div>
+              <p class="reto__nota" id="reto-nota">Tus intentos aparecerán aquí. Fíjate: tampoco tú reaccionarás igual dos veces.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ---------- 02 · Instrumentos ---------- -->
+      <article class="cap" id="cap-2">
+        <div class="cap__texto">
+          <span class="cap__num" aria-hidden="true">02</span>
+          <p class="etiqueta" data-revela>Conocer los instrumentos</p>
+          <h3 class="cap__titulo" data-revela>Antes de medir, conocer <em>con qué</em> se mide</h3>
+          <p data-revela>Antes de tomar cualquier medida revisamos los tres instrumentos de la sesión: la regla, el calibrador Vernier (también llamado pie de rey) y la balanza. En cada uno buscamos el cambio más pequeño que es capaz de registrar.</p>
+          <p data-revela>Ese detalle marca cuánta duda trae cada medición. Ningún instrumento puede ser más preciso que su división más pequeña: lo que queda por debajo de ella, sencillamente, no lo ve.</p>
+        </div>
+
+        <div class="cap__visual">
+          <ul class="instrumentos">
+            <li class="instrumento" data-revela>
+              <svg viewBox="0 0 240 90" class="instrumento__dibujo" aria-hidden="true">
+                <rect data-trazo x="10" y="28" width="220" height="34" rx="3"/>
+                <g class="instrumento__marcas" id="marcas-regla"></g>
+              </svg>
+              <div>
+                <h4>La regla</h4>
+                <p>La más sencilla de todas. Su división más pequeña pone el límite de lo que puede distinguir.</p>
+              </div>
+            </li>
+            <li class="instrumento" data-revela>
+              <svg viewBox="0 0 240 90" class="instrumento__dibujo" aria-hidden="true">
+                <path data-trazo d="M14 22 H226 V36 H14 Z"/>
+                <path data-trazo d="M14 36 V78 L30 78 L34 36"/>
+                <path data-trazo d="M14 22 V8 L24 8 L26 22"/>
+                <g class="instrumento__corredera">
+                  <path data-trazo d="M92 16 H150 V44 H92 Z"/>
+                  <path data-trazo d="M92 44 L96 78 L110 78 L112 44"/>
+                  <path data-trazo d="M92 16 L94 8 L102 8 L104 16"/>
+                </g>
+                <g class="instrumento__marcas" id="marcas-vernier"></g>
+              </svg>
+              <div>
+                <h4>El calibrador Vernier <span>(pie de rey)</span></h4>
+                <p>Una escala deslizante que permite leer fracciones de la división principal. Mucho más fino que la regla.</p>
+              </div>
+            </li>
+            <li class="instrumento" data-revela>
+              <svg viewBox="0 0 240 90" class="instrumento__dibujo" aria-hidden="true">
+                <path data-trazo d="M70 20 H170"/>
+                <path data-trazo d="M120 20 V30"/>
+                <path data-trazo d="M50 30 H190 L204 80 H36 Z"/>
+                <rect data-trazo x="92" y="48" width="56" height="20" rx="2"/>
+                <text x="120" y="63" class="instrumento__pantalla">— — g</text>
+              </svg>
+              <div>
+                <h4>La balanza</h4>
+                <p>Mide la masa. Su lectura mínima define cuánta duda trae cada pesada.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- ---------- 03 · Cuerpos sólidos ---------- -->
+      <article class="cap" id="cap-3">
+        <div class="cap__texto">
+          <span class="cap__num" aria-hidden="true">03</span>
+          <p class="etiqueta" data-revela>Medir cuerpos sólidos</p>
+          <h3 class="cap__titulo" data-revela>Tres cuerpos, <em>muchas</em> lecturas</h3>
+          <p data-revela>Con el calibrador Vernier medimos tres cuerpos: un cilindro macizo, un cilindro hueco y una esfera. Tomamos las dimensiones que describen su forma, como diámetros y alturas, y con la balanza registramos la masa de cada uno.</p>
+          <p data-revela>Cada medición la repetimos varias veces, retirando el cuerpo entre una lectura y otra. Así cada lectura empezaba de cero, y las pequeñas diferencias entre ellas mostraban qué tan estable era la medida.</p>
+        </div>
+
+        <div class="cap__visual">
+          <div class="solidos">
+            <figure class="solido">
+              <svg viewBox="0 0 160 200" aria-hidden="true">
+                <ellipse data-trazo cx="80" cy="50" rx="46" ry="14"/>
+                <path data-trazo d="M34 50 V150"/>
+                <path data-trazo d="M126 50 V150"/>
+                <path data-trazo d="M34 150 A46 14 0 0 0 126 150"/>
+                <path class="tenue" data-trazo d="M34 150 A46 14 0 0 1 126 150"/>
+                <g class="cota" data-cota>
+                  <path d="M34 22 H126 M34 16 V28 M126 16 V28"/><text x="80" y="14">d</text>
+                  <path d="M146 50 V150 M140 50 H152 M140 150 H152"/><text x="152" y="104">h</text>
+                </g>
+              </svg>
+              <figcaption class="mono">Cilindro macizo</figcaption>
+            </figure>
+            <figure class="solido">
+              <svg viewBox="0 0 160 200" aria-hidden="true">
+                <ellipse data-trazo cx="80" cy="50" rx="46" ry="14"/>
+                <ellipse data-trazo cx="80" cy="50" rx="24" ry="7"/>
+                <path data-trazo d="M34 50 V150"/>
+                <path data-trazo d="M126 50 V150"/>
+                <path data-trazo d="M34 150 A46 14 0 0 0 126 150"/>
+                <path class="tenue" data-trazo d="M56 50 V150 M104 50 V150"/>
+                <g class="cota" data-cota>
+                  <path d="M34 22 H126 M34 16 V28 M126 16 V28"/><text x="80" y="14">D</text>
+                  <path d="M56 182 H104 M56 176 V188 M104 176 V188"/><text x="80" y="198">d</text>
+                </g>
+              </svg>
+              <figcaption class="mono">Cilindro hueco</figcaption>
+            </figure>
+            <figure class="solido">
+              <svg viewBox="0 0 160 200" aria-hidden="true">
+                <circle data-trazo cx="80" cy="100" r="52"/>
+                <ellipse data-trazo cx="80" cy="100" rx="52" ry="14"/>
+                <path class="tenue" data-trazo d="M80 48 A16 52 0 0 1 80 152"/>
+                <g class="cota" data-cota>
+                  <path d="M28 182 H132 M28 176 V188 M132 176 V188"/><text x="80" y="198">d</text>
+                </g>
+              </svg>
+              <figcaption class="mono">Esfera</figcaption>
+            </figure>
+            <p class="solidos__lecturas mono" aria-hidden="true">Lectura <b id="lecturas-n">1</b> · retirar · volver a medir</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- ---------- 04 · De las medidas a los resultados ---------- -->
+      <article class="cap" id="cap-4">
+        <div class="cap__texto">
+          <span class="cap__num" aria-hidden="true">04</span>
+          <p class="etiqueta" data-revela>De las medidas a los resultados</p>
+          <h3 class="cap__titulo" data-revela>La duda <em>también</em> se hereda</h3>
+          <p data-revela>Con esas medidas calculamos el volumen de cada cuerpo según su forma y, junto con la masa, su densidad. Las medidas leídas en el instrumento son directas; las que se calculan a partir de ellas, como el volumen o la densidad, son indirectas.</p>
+          <p data-revela>Los cálculos no borran la duda: la arrastran. Si el diámetro trae un pequeño margen y la altura trae otro, el volumen los hereda a ambos. Vimos cómo la incertidumbre de cada medición directa viaja hasta los resultados y, por el camino, puede crecer.</p>
+        </div>
+
+        <div class="cap__visual">
+          <div class="propaga">
+            <svg viewBox="0 0 520 360" aria-hidden="true" class="propaga__svg">
+              <defs>
+                <linearGradient id="flujo" gradientUnits="userSpaceOnUse" x1="176" y1="0" x2="420" y2="0">
+                  <stop offset="0" stop-color="#ede9e1" stop-opacity=".25"/>
+                  <stop offset="1" stop-color="#ff5a1f" stop-opacity=".9"/>
+                </linearGradient>
+              </defs>
+              <!-- conexiones -->
+              <path class="propaga__hilo" data-trazo d="M176 70 C 245 70, 245 150, 300 150"/>
+              <path class="propaga__hilo" data-trazo d="M176 150 H300"/>
+              <path class="propaga__hilo" data-trazo d="M176 290 C 250 290, 255 238, 300 238"/>
+              <path class="propaga__hilo" data-trazo d="M385 172 V216"/>
+              <!-- medidas directas -->
+              <g class="nodo">
+                <text x="20" y="58" class="nodo__k">Directa</text>
+                <text x="20" y="80" class="nodo__v">Diámetro</text>
+                <g class="barra-error" transform="translate(150 70)"><path d="M-14 0 H14 M-14 -6 V6 M14 -6 V6"/><circle r="3"/></g>
+              </g>
+              <g class="nodo">
+                <text x="20" y="138" class="nodo__k">Directa</text>
+                <text x="20" y="160" class="nodo__v">Altura</text>
+                <g class="barra-error" transform="translate(150 150)"><path d="M-12 0 H12 M-12 -6 V6 M12 -6 V6"/><circle r="3"/></g>
+              </g>
+              <g class="nodo">
+                <text x="20" y="278" class="nodo__k">Directa</text>
+                <text x="20" y="300" class="nodo__v">Masa</text>
+                <g class="barra-error" transform="translate(150 290)"><path d="M-10 0 H10 M-10 -6 V6 M10 -6 V6"/><circle r="3"/></g>
+              </g>
+              <!-- resultados indirectos -->
+              <g class="nodo nodo--calc">
+                <rect x="300" y="128" width="190" height="44" rx="22"/>
+                <text x="322" y="157" class="nodo__v">Volumen</text>
+                <g class="barra-error barra-error--calc" transform="translate(452 150)"><path d="M-22 0 H22 M-22 -6 V6 M22 -6 V6"/><circle r="3"/></g>
+              </g>
+              <g class="nodo nodo--calc">
+                <rect x="300" y="216" width="204" height="44" rx="22"/>
+                <text x="322" y="245" class="nodo__v">Densidad</text>
+                <g class="barra-error barra-error--calc" transform="translate(462 238)"><path d="M-30 0 H30 M-30 -6 V6 M30 -6 V6"/><circle r="3"/></g>
+              </g>
+              <text x="300" y="300" class="nodo__k">Indirectas: se calculan</text>
+              <text x="20" y="20" class="nodo__k">Se leen en el instrumento</text>
+            </svg>
+            <p class="propaga__nota mono"><i></i> El ancho de cada barra representa la duda que trae el valor</p>
+          </div>
+        </div>
+      </article>
+
+      <!-- ---------- 05 · La idea central ---------- -->
+      <article class="idea" id="cap-5">
+        <div class="idea__fijo">
+          <span class="cap__num cap__num--idea" aria-hidden="true">05</span>
+          <p class="etiqueta">La idea central de la práctica</p>
+          <h3 class="idea__frase" id="idea-frase">Ninguna medición es exacta.</h3>
+
+          <div class="idea__campana">
+            <svg viewBox="0 0 600 200" aria-hidden="true">
+              <path class="campana__banda" id="campana-banda" d=""/>
+              <path class="campana__curva" id="campana-curva" d=""/>
+              <path class="campana__eje" d="M20 180 H580"/>
+              <path class="campana__centro" d="M300 24 V180"/>
+              <text x="300" y="16" class="campana__txt">valor más probable</text>
+              <text x="300" y="198" class="campana__txt campana__txt--acento">± incertidumbre</text>
+            </svg>
+          </div>
+
+          <p class="idea__texto">Toda medida trae una incertidumbre, y esa incertidumbre depende de tres cosas. Entenderla no es aceptar un fracaso: es justo lo que vuelve <em>confiable</em> un resultado.</p>
+
+          <ol class="factores">
+            <li class="factor"><b>01</b><h4>El instrumento</h4><p>Su división más pequeña pone el límite de lo que se puede ver.</p></li>
+            <li class="factor"><b>02</b><h4>Quien mide</h4><p>Sus reflejos, su vista y su práctica cambian cada lectura.</p></li>
+            <li class="factor"><b>03</b><h4>El método</h4><p>Cómo, cuántas veces y en qué condiciones se toma la medida.</p></li>
+          </ol>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <div class="pie__cierre">
+      <p class="etiqueta" data-revela>Para llevar</p>
+      <p class="pie__frase"><span class="linea"><span>Medir bien no es medir sin error.</span></span> <span class="linea"><span><em>Es saber cuánto error hay.</em></span></span></p>
+    </div>
+
+    <nav class="pie__practicas" aria-label="Prácticas de laboratorio">
+      <a class="pie__p pie__p--actual" href="./" aria-current="page">
+        <b>01</b><span>Error e incertidumbre en mediciones directas e indirectas</span><i class="mono">Estás aquí</i>
+      </a>
+      <span class="pie__p pie__p--pronto">
+        <b>02</b><span>Práctica 2</span><i class="mono">Próximamente</i>
+      </span>
+      <span class="pie__p pie__p--pronto">
+        <b>03</b><span>Práctica 3</span><i class="mono">Próximamente</i>
+      </span>
+    </nav>
+
+    <div class="pie__base mono">
+      <span>Leonardo Sánchez</span>
+      <span>UNAD · Física General (100413) · 2026</span>
+      <a href="../">Todas las prácticas</a>
+      <a href="#portada">Volver arriba ↑</a>
+    </div>
+  </footer>
+</body>
+</html>
