@@ -385,7 +385,7 @@
     gsap.set(".portada__pm", { yPercent: -55, y: 0 });
     C.alListo(() => {
       const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
-      tl.fromTo(".portada__nombre .linea > span", { yPercent: 110, y: 0 }, { yPercent: 0, duration: 1.5, stagger: 0.1 })
+      tl.fromTo(".portada__nombre .linea > span", { yPercent: 160, y: 0 }, { yPercent: 0, duration: 1.5, stagger: 0.1 })
         .fromTo(".portada [data-entra]", { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 1.2, stagger: 0.07 }, 0.2)
         .fromTo(".portada__pm", { opacity: 0, scale: 0.8, rotate: -12 }, { opacity: 1, scale: 1, rotate: 0, duration: 2.4 }, 0)
         .fromTo(".portada__rejilla", { opacity: 0 }, { opacity: 1, duration: 2 }, 0);
@@ -396,6 +396,34 @@
     gsap.to(".portada__pm", { rotate: 30, yPercent: -75, ease: "none", scrollTrigger: salida });
     gsap.to(".portada__centro", { y: -120, opacity: 0.15, ease: "none", scrollTrigger: salida });
 
+    // Título: la nube de mediciones flota en sentido contrario al scroll
+    gsap.fromTo(".nube", { yPercent: 8 }, { yPercent: -8, ease: "none", scrollTrigger: { trigger: ".practica", start: "top bottom", end: "bottom top", scrub: true } });
+
+    // Escenas de los capítulos: parallax suave (solo en pantallas anchas, donde
+    // cada escena tiene su propia columna y no puede montarse sobre el texto)
+    gsap.matchMedia().add("(min-width: 900px)", () => {
+      ["#cap-1", "#cap-2", "#cap-4"].forEach((id) => {
+        const v = $(`${id} .cap__visual`);
+        if (v) gsap.fromTo(v, { yPercent: 6 }, { yPercent: -6, ease: "none", scrollTrigger: { trigger: v.closest(".cap"), start: "top bottom", end: "bottom top", scrub: true } });
+      });
+    });
+
+    // Cinta del pie: se acelera con el scroll y cambia de sentido al subir
+    const pista = $(".pie__cinta-pista");
+    const anim = pista && pista.getAnimations ? pista.getAnimations()[0] : null;
+    if (anim) {
+      let meta = 1, ritmo = 1;
+      ScrollTrigger.create({
+        trigger: ".pie", start: "top bottom", end: "bottom top",
+        onUpdate: (s) => { const v = s.getVelocity(); meta = (v < 0 ? -1 : 1) * Math.min(7, 1 + Math.abs(v) / 350); },
+      });
+      gsap.ticker.add(() => {
+        meta += ((meta < 0 ? -1 : 1) - meta) * 0.04;
+        ritmo += (meta - ritmo) * 0.12;
+        if (Math.abs(ritmo - anim.playbackRate) > 0.01) anim.playbackRate = ritmo;
+      });
+    }
+
     // Revelados genéricos
     $$("[data-revela]").forEach((el) => {
       gsap.to(el, { opacity: 1, y: 0, duration: 1.1, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 88%" } });
@@ -403,7 +431,7 @@
 
     // Titulares por líneas
     $$(".practica__titulo, .hicimos__titulo, .pie__frase").forEach((t) => {
-      gsap.fromTo($$(".linea > span", t), { yPercent: 110, y: 0 }, {
+      gsap.fromTo($$(".linea > span", t), { yPercent: 160, y: 0 }, {
         yPercent: 0, duration: 1.4, ease: "expo.out", stagger: 0.12,
         scrollTrigger: { trigger: t, start: "top 82%" },
       });

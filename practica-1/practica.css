@@ -3,9 +3,9 @@
    ========================================================= */
 
 /* ---------- Revelados (sólo si hay animación) ---------- */
-.linea { display: block; overflow: hidden; padding-bottom: 0.06em; margin-bottom: -0.06em; }
+.linea { display: block; overflow: hidden; padding-bottom: 0.16em; margin-bottom: -0.16em; } /* sitio para colas como la de la «q» */
 .linea > span { display: inline-block; }
-.js .linea > span { transform: translateY(110%); }
+.js .linea > span { transform: translateY(160%); }
 .js [data-entra] { opacity: 0; }
 .js [data-revela] { opacity: 0; transform: translateY(28px); }
 
