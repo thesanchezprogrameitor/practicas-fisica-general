@@ -89,10 +89,12 @@
 .portada__nombre {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(4rem, min(15vw, 24vh), 16rem);
+  font-size: clamp(2.6rem, min(13.5vw, 24vh), 16rem);
   line-height: 0.86;
   letter-spacing: -0.03em;
 }
+/* El nombre va en un solo renglón */
+.portada__nombre .linea { display: inline-block; vertical-align: top; }
 .portada__nombre i { font-style: normal; color: var(--acento); }
 
 .portada__curso {
@@ -345,12 +347,12 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
   gap: clamp(2.5rem, 7vw, 8rem);
   align-items: center;
-  max-width: 1360px;
+  max-width: 1640px;
   padding: clamp(3.5rem, 10vh, 7rem) clamp(0px, 6vw, 110px) clamp(3.5rem, 10vh, 7rem) 0;
   border-top: 1px solid var(--linea);
 }
-.cap__texto { position: relative; display: grid; gap: 1.3rem; max-width: 56ch; }
-.cap__texto p:not(.etiqueta) { color: var(--papel-2); }
+.cap__texto { position: relative; display: grid; gap: 1.3rem; }
+.cap__texto p:not(.etiqueta) { color: var(--papel-2); max-width: 60ch; }
 .cap__num {
   position: absolute;
   top: -0.32em;
@@ -371,6 +373,7 @@
   line-height: 1;
   letter-spacing: -0.015em;
   margin-bottom: 0.4rem;
+  text-wrap: balance;
 }
 .cap__titulo em { color: var(--acento); }
 
@@ -580,10 +583,9 @@
 .pie__frase {
   margin: 1.4rem 0 clamp(2.5rem, 6vh, 4rem);
   font-family: var(--serif);
-  font-size: clamp(2.6rem, 7.4vw, 8rem);
+  font-size: clamp(2.4rem, 6.2vw, 7.4rem);
   line-height: 0.95;
   letter-spacing: -0.02em;
-  max-width: 20ch;
 }
 .pie__frase em { color: #c2410c; }
 
