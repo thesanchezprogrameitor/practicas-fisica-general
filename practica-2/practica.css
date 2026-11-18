@@ -30,6 +30,9 @@
 }
 
 body { background: var(--tinta); }
+
+/* Ancho útil: el contenido nunca pasa de 1640 px y queda centrado en pantallas anchas */
+:root { --lado: max(var(--gutter), calc((100vw - 1640px) / 2)); }
 ::selection { background: var(--miel); color: var(--ink); }
 
 /* El cursor de coordenadas se invierte para leerse sobre capas claras y oscuras */
@@ -125,7 +128,7 @@ body { background: var(--tinta); }
   min-height: 100svh;
   display: grid;
   grid-template-rows: 1fr auto;
-  padding: calc(var(--gutter) + 44px) var(--gutter) calc(24vh + 1rem);
+  padding: calc(var(--gutter) + 44px) var(--lado) calc(24vh + 1rem);
   overflow: hidden;
   isolation: isolate;
 }
@@ -136,7 +139,7 @@ body { background: var(--tinta); }
   font-family: var(--tit);
   font-weight: 800;
   font-variation-settings: "wdth" 75, "opsz" 96;
-  font-size: clamp(4rem, min(16vw, 25vh), 17rem);
+  font-size: clamp(2.2rem, min(13.5vw, 25vh), 17rem);
   line-height: 0.82;
   letter-spacing: -0.03em;
   color: #0b3b4f;
@@ -183,10 +186,10 @@ body { background: var(--tinta); }
   min-height: 100vh;
   min-height: 100svh;
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
   align-items: center;
-  gap: clamp(2rem, 5vw, 5rem);
-  padding: clamp(3rem, 8vh, 5rem) var(--gutter) clamp(4rem, 10vh, 6rem);
+  gap: max(2rem, var(--lado));
+  padding: clamp(3rem, 8vh, 5rem) var(--lado) clamp(4rem, 10vh, 6rem);
 }
 .practica__texto { display: grid; gap: clamp(1rem, 2.6vh, 1.8rem); }
 .practica__titulo { display: grid; font-weight: 400; margin: 0; }
@@ -247,7 +250,7 @@ body { background: var(--tinta); }
   display: grid;
   align-content: center;
   gap: clamp(1rem, 2.6vh, 1.8rem);
-  padding: calc(var(--gutter) + 56px) var(--gutter) clamp(3rem, 8vh, 5rem);
+  padding: calc(var(--gutter) + 56px) var(--lado) clamp(3rem, 8vh, 5rem);
   background: var(--bg);
 }
 .hicimos__titulo {
@@ -283,7 +286,11 @@ body { background: var(--tinta); }
 /* =========================================================
    CAPAS
    ========================================================= */
-.capa { padding: clamp(5rem, 13vh, 8rem) var(--gutter); }
+.capa { padding: clamp(5rem, 13vh, 8rem) var(--lado); }
+/* En pantallas de computador cada capa ocupa una pantalla, con su contenido centrado */
+@media (min-width: 900px) and (min-height: 640px) {
+  .capa:not(.capa--3) { min-height: 100vh; min-height: 100svh; display: grid; align-content: center; padding-block: clamp(3rem, 8vh, 6rem); }
+}
 .capa__rejilla {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -291,7 +298,7 @@ body { background: var(--tinta); }
   align-items: center;
   column-gap: clamp(2rem, 6vw, 6rem);
   row-gap: clamp(1.4rem, 3vh, 2.2rem);
-  max-width: 1320px;
+  max-width: 1640px;
   margin: 0 auto;
 }
 .capa__rejilla--invertida { grid-template-areas: "vis cab" "vis txt"; }
@@ -389,7 +396,7 @@ figure figcaption.mono { max-width: 44ch; margin: 0.8rem auto 0; color: var(--fg
   flex-direction: column;
   justify-content: center;
   gap: clamp(1.4rem, 4vh, 3rem);
-  padding: clamp(5rem, 11vh, 7rem) var(--gutter) clamp(2.5rem, 6vh, 4rem);
+  padding: clamp(5rem, 11vh, 7rem) var(--lado) clamp(2.5rem, 6vh, 4rem);
   overflow: hidden;
 }
 .capa3__cab { display: grid; gap: 0.9rem; max-width: 980px; }
@@ -521,7 +528,7 @@ figure figcaption.mono { max-width: 44ch; margin: 0.8rem auto 0; color: var(--fg
 }
 
 /* ---------- Capa 4 · Lupas ---------- */
-.capa4 { max-width: 1320px; margin: 0 auto; display: grid; gap: clamp(2rem, 6vh, 4rem); }
+.capa4 { max-width: 1640px; margin: 0 auto; display: grid; gap: clamp(2rem, 6vh, 4rem); }
 .capa__cab--centro { grid-area: auto; justify-items: center; text-align: center; }
 .capa__cab--centro .capa__num { justify-content: center; }
 .lupas {
@@ -591,7 +598,7 @@ figure figcaption.mono { max-width: 44ch; margin: 0.8rem auto 0; color: var(--fg
   min-height: 100svh;
   display: grid;
   align-items: center;
-  padding: clamp(5rem, 12vh, 8rem) var(--gutter);
+  padding: clamp(5rem, 12vh, 8rem) var(--lado);
   overflow: hidden;
   isolation: isolate;
 }
@@ -601,7 +608,7 @@ figure figcaption.mono { max-width: 44ch; margin: 0.8rem auto 0; color: var(--fg
   grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
   align-items: center;
   gap: clamp(2rem, 6vw, 6rem);
-  max-width: 1320px;
+  max-width: 1640px;
   margin: 0 auto;
   width: 100%;
 }
@@ -639,7 +646,7 @@ figure figcaption.mono { max-width: 44ch; margin: 0.8rem auto 0; color: var(--fg
 /* =========================================================
    PIE (miel: la capa más densa, al fondo)
    ========================================================= */
-.pie2 { padding: clamp(5rem, 13vh, 8rem) var(--gutter) 2rem; }
+.pie2 { padding: clamp(5rem, 13vh, 8rem) var(--lado) 2rem; }
 .pie2__cierre { display: grid; gap: 1.2rem; margin-bottom: clamp(3rem, 8vh, 5rem); }
 .pie2__frase {
   max-width: 22ch;
@@ -716,7 +723,11 @@ a.pie2__p:hover { color: var(--bg); }
 .profundidad a { position: relative; display: flex; justify-content: flex-end; align-items: center; gap: 0.7rem; text-decoration: none; }
 .profundidad i { width: 11px; height: 11px; border: 1.5px solid #fff; border-radius: 50%; background: #000; flex: none; }
 .profundidad a.activo i { background: #fff; }
-.profundidad span {
+.profundidad a span {
+  position: absolute;
+  right: calc(100% + 0.6rem);
+  white-space: nowrap;
+  pointer-events: none;
   font: 0.66rem var(--mono);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -740,3 +751,15 @@ a.pie2__p:hover { color: var(--bg); }
 @media (prefers-reduced-motion: reduce) {
   .ola svg, .prisma3d, .portada__gota { animation: none !important; }
 }
+
+/* =========================================================
+   Títulos en mayúscula (el resto del texto, en minúscula)
+   ========================================================= */
+.portada__nombre,
+.practica__titulo,
+.hicimos__titulo,
+.capa__titulo,
+.metodo h4,
+.lupa figcaption b,
+.idea__frase,
+.pie2__frase { text-transform: uppercase; }

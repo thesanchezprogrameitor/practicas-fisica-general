@@ -6,7 +6,7 @@
 /* Ancho útil: el contenido nunca pasa de 1640 px y queda centrado en pantallas anchas */
 :root { --lado: max(var(--gutter), calc((100vw - 1640px) / 2)); }
 
-.linea { display: block; overflow: hidden; padding-bottom: 0.16em; margin-bottom: -0.16em; } /* sitio para colas como la de la «q» */
+.linea { display: block; overflow: hidden; padding: 0.22em 0 0.16em; margin: -0.22em 0 -0.16em; } /* sitio para tildes de mayúsculas y colas como la de la «Q» */
 .linea > span { display: inline-block; }
 .js .linea > span { transform: translateY(160%); }
 .js [data-entra] { opacity: 0; }
@@ -92,7 +92,7 @@
 .portada__nombre {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(2.6rem, min(13.5vw, 24vh), 16rem);
+  font-size: clamp(2.2rem, min(11.4vw, 24vh), 13rem);
   line-height: 0.86;
   letter-spacing: -0.03em;
 }
@@ -387,7 +387,7 @@
 .cap__titulo {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(2.3rem, 4.6vw, 4.4rem);
+  font-size: clamp(1.9rem, 3.7vw, 3.8rem);
   line-height: 1;
   letter-spacing: -0.015em;
   margin-bottom: 0.4rem;
@@ -661,3 +661,15 @@
 .pie__cinta b { font-style: normal; font-weight: 400; color: #c2410c; padding: 0 0.15em; }
 @keyframes cinta { to { transform: translateX(-50%); } }
 @media (prefers-reduced-motion: reduce) { .pie__cinta-pista { animation: none; } }
+
+/* =========================================================
+   Títulos en mayúscula (el resto del texto, en minúscula)
+   ========================================================= */
+.portada__nombre,
+.practica__titulo,
+.hicimos__titulo,
+.cap__titulo,
+.idea__frase,
+.pie__frase,
+.instrumento h4,
+.factor h4 { text-transform: uppercase; }

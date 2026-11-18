@@ -567,6 +567,35 @@
     gsap.from(".lupa", { scale: 0.6, opacity: 0, rotate: (i) => (i ? 12 : -12), duration: 1.3, ease: "back.out(1.5)", stagger: 0.15, scrollTrigger: { trigger: ".lupas", start: "top 80%" } });
     gsap.fromTo(".idea__rho", { yPercent: 12, rotate: -6 }, { yPercent: -8, rotate: 4, ease: "none", scrollTrigger: { trigger: ".idea", start: "top bottom", end: "bottom top", scrub: true } });
 
+    // Imán suave entre secciones (pantallas de computador): si el scroll se detiene
+    // cerca del comienzo de una sección, termina de llevarla a pantalla completa.
+    if (C.lenis && window.matchMedia) {
+      const pantallaAncha = window.matchMedia("(min-width: 900px) and (min-height: 640px)");
+      const anclas = () => [$(".portada"), $(".practica"), $(".hicimos__cab"), ...$$(".capa"), $(".idea"), $(".pie2")]
+        .filter(Boolean)
+        .map((el) => {
+          const caja = el.parentElement && el.parentElement.classList.contains("pin-spacer") ? el.parentElement : el;
+          return caja.getBoundingClientRect().top + window.scrollY;
+        });
+      let esperaSeccion = null;
+      C.lenis.on("scroll", () => {
+        clearTimeout(esperaSeccion);
+        esperaSeccion = setTimeout(() => {
+          if (!pantallaAncha.matches) return;
+          const y = window.scrollY, vh = window.innerHeight;
+          // dentro de una sección fijada (el manifiesto o el carril) no se toca nada
+          if (ScrollTrigger.getAll().some((s) => s.pin && y > s.start + 4 && y < s.end - 4)) return;
+          const max = document.documentElement.scrollHeight - vh;
+          let mejor = null;
+          anclas().forEach((a) => {
+            const d = Math.min(a, max) - y;
+            if (Math.abs(d) < vh * 0.22 && (mejor === null || Math.abs(d) < Math.abs(mejor))) mejor = d;
+          });
+          if (mejor !== null && Math.abs(mejor) > 6) C.irA(y + mejor, { duration: 0.9 });
+        }, 260);
+      });
+    }
+
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
     window.addEventListener("load", () => ScrollTrigger.refresh());
     C.alListo(() => setTimeout(() => ScrollTrigger.refresh(), 120));

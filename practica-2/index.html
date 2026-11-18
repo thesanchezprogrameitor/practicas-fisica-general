@@ -19,7 +19,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="../assets/css/comun.css?v=4">
-  <link rel="stylesheet" href="practica.css?v=2">
+  <link rel="stylesheet" href="practica.css?v=4">
 
   <script>
     (function () {
@@ -35,7 +35,7 @@
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script defer src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
   <script defer src="../assets/js/comun.js?v=4"></script>
-  <script defer src="practica.js?v=2"></script>
+  <script defer src="practica.js?v=4"></script>
 </head>
 <body>
   <a class="sr-only" href="#lo-que-hicimos">Saltar a «Lo que hicimos»</a>
@@ -120,7 +120,7 @@
           <span class="practica__t2" data-flota>y proporcionalidad</span>
           <span class="practica__t3" data-sube>en sólidos y líquidos</span>
         </h1>
-        <p class="practica__lead" data-sube>Pesamos sólidos y líquidos, medimos sus volúmenes y sumergimos piezas en agua para entender por qué cada material tiene su propia densidad, y por qué esa propiedad no cambia aunque cambie el tamaño de la muestra.</p>
+        <p class="practica__lead" data-sube>¿Por qué la madera flota y el metal se hunde? Pesamos y medimos sólidos y líquidos y comprobamos que cada material tiene su propia densidad, sin importar el tamaño de la muestra.</p>
       </div>
 
       <figure class="columna" aria-hidden="true">
@@ -178,17 +178,8 @@
           <h3 class="capa__titulo" data-flota>Cuánta materia cabe en cada espacio</h3>
         </header>
         <div class="capa__texto">
-          <p data-sube>La densidad compara la masa de un cuerpo con el volumen que ocupa: se obtiene dividiendo la masa entre el volumen.</p>
-          <div class="formula" data-sube>
-            <span class="formula__rho">ρ</span><span class="formula__igual">=</span>
-            <span class="formula__frac"><span>m</span><span>V</span></span>
-            <dl class="formula__leyenda">
-              <div><dt>ρ</dt><dd>densidad</dd></div>
-              <div><dt>m</dt><dd>masa</dd></div>
-              <div><dt>V</dt><dd>volumen</dd></div>
-            </dl>
-          </div>
-          <p data-sube>Lo valioso es que no depende del tamaño. Un clavo y una viga del mismo hierro tienen la misma densidad, porque cuando crece el volumen la masa crece en la misma medida. Por eso funciona como una huella: permite reconocer de qué está hecho un objeto, sea una muestra pequeña o una pieza enorme.</p>
+          <p data-sube>La densidad, que se representa con la letra griega ρ, compara la masa de un cuerpo con el volumen que ocupa: se obtiene dividiendo la masa entre el volumen.</p>
+          <p data-sube>Lo valioso es que no depende del tamaño: un clavo y una viga del mismo hierro tienen la misma densidad, porque si crece el volumen, la masa crece en la misma medida. Por eso funciona como una huella que delata de qué está hecho un objeto.</p>
         </div>
         <figure class="cubo-escena" aria-hidden="true">
           <svg viewBox="0 0 460 360">
@@ -226,7 +217,7 @@
         </header>
         <div class="capa__texto">
           <p data-sube>Si se duplica el volumen de un mismo material, su masa también se duplica; si se triplica, la masa se triplica. Esa relación se llama proporcionalidad directa.</p>
-          <p data-sube>En una gráfica de masa contra volumen, cada material dibuja una línea recta que sale del origen. La inclinación de esa recta es la constante de proporcionalidad, y esa constante es justamente la densidad: cuanto más empinada es la recta, más denso es el material.</p>
+          <p data-sube>En una gráfica de masa contra volumen, cada material dibuja una recta que sale del origen. Su inclinación es la constante de proporcionalidad, que es justamente la densidad: cuanto más empinada la recta, más denso el material.</p>
         </div>
         <figure class="grafica" aria-hidden="true">
           <svg viewBox="0 0 480 400" id="grafica">
@@ -280,10 +271,10 @@
             <div class="metodo__texto">
               <p class="metodo__n mono">Camino 1</p>
               <h4>Geométrica</h4>
-              <p>Para cuerpos de forma regular, como el prisma y la esfera, basta con medir sus dimensiones y aplicar la fórmula de su forma.</p>
+              <p>Para cuerpos de forma regular, como el prisma y la esfera, basta con medir sus dimensiones y calcular el volumen a partir de ellas.</p>
               <ul class="metodo__formulas">
-                <li><span>Prisma</span><code>V = largo × ancho × alto</code></li>
-                <li><span>Esfera</span><code>V = 4⁄3 · π · r³</code></li>
+                <li><span>Prisma</span><code>largo, ancho y alto</code></li>
+                <li><span>Esfera</span><code>su diámetro</code></li>
               </ul>
             </div>
           </article>
@@ -309,7 +300,7 @@
             <div class="metodo__texto">
               <p class="metodo__n mono">Camino 2</p>
               <h4>Por inmersión</h4>
-              <p>Al sumergir un sólido en una probeta con agua, el nivel sube. Lo que sube el agua es exactamente el volumen del sólido, así que sirve incluso para piedras y piezas de forma irregular.</p>
+              <p>Al sumergir un sólido en una probeta con agua, el nivel sube. El volumen de agua que sube es exactamente el volumen del sólido, así que sirve incluso para piedras y piezas irregulares.</p>
             </div>
           </article>
 
@@ -332,7 +323,7 @@
             <div class="metodo__texto">
               <p class="metodo__n mono">Camino 3</p>
               <h4>Con picnómetro</h4>
-              <p>Para los líquidos se usa un frasco de volumen conocido y muy preciso. Su tapón tiene un capilar por donde sale el exceso, así que siempre guarda el mismo volumen. Se pesa vacío y lleno: la diferencia es la masa del líquido y, como el volumen ya se conoce, la densidad se calcula de inmediato.</p>
+              <p>Para los líquidos se usa un frasco de volumen fijo y muy preciso: su tapón tiene un capilar por donde sale el exceso. Se pesa vacío y lleno; la diferencia es la masa del líquido, y con el volumen ya conocido sale su densidad.</p>
             </div>
           </article>
         </div>
@@ -431,7 +422,7 @@
         </header>
         <div class="capa__texto">
           <p data-sube>La densidad de un líquido puede cambiar mientras se mide. Si el recipiente queda abierto, parte del líquido se evapora y la masa registrada baja.</p>
-          <p data-sube>La humedad del aire juega en sentido contrario: algunos líquidos, como el alcohol, absorben agua del ambiente y su densidad cambia. La temperatura también influye, porque al calentarse el líquido se dilata. Por eso conviene medir rápido, tapar los recipientes y anotar las condiciones del laboratorio.</p>
+          <p data-sube>La humedad actúa al revés: algunos líquidos, como el alcohol, absorben agua del aire y su masa aumenta. Por eso conviene medir rápido, tapar los recipientes y anotar las condiciones del laboratorio.</p>
         </div>
         <figure class="vaso-amb" aria-hidden="true">
           <svg viewBox="0 0 440 360" id="ambiente">
