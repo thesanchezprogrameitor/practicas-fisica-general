@@ -136,7 +136,7 @@
     }
 
     const ms = (d) => Math.round(Math.sqrt((2 * d) / 100 / G) * 1000);
-    const texto = (n, d) => `Intento de ejemplo ${n}: la regla alcanzó a caer <b>${coma(d)} cm</b> antes de ser atrapada. Con la caída libre, eso equivale a unos <b>${ms(d)} ms</b> de reacción.`;
+    const texto = (n, d) => `Intento de ejemplo ${n}: la regla cayó <b>${coma(d)} cm</b> antes de ser atrapada, unos <b>${ms(d)} ms</b> de reacción.`;
     const ponerCota = (d) => {
       const y = CERO + d * PX;
       cotaLinea.setAttribute("y2", y);
