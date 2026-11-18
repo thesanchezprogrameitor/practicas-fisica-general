@@ -19,7 +19,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="../assets/css/comun.css?v=4">
-  <link rel="stylesheet" href="practica.css?v=7">
+  <link rel="stylesheet" href="practica.css?v=10">
 
   <script>
     (function () {
@@ -35,7 +35,7 @@
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script defer src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
   <script defer src="../assets/js/comun.js?v=4"></script>
-  <script defer src="practica.js?v=7"></script>
+  <script defer src="practica.js?v=10"></script>
 </head>
 <body>
   <a class="sr-only" href="#lo-que-hicimos">Saltar a «Lo que hicimos»</a>
@@ -105,7 +105,7 @@
           <span class="linea"><span><em>incertidumbre</em></span></span>
           <span class="linea linea--it"><span>en mediciones directas e indirectas</span></span>
         </h1>
-        <p class="practica__lead" data-revela>Medimos tiempos, longitudes y masas para descubrir algo que no se ve a simple vista: cuánto puede fallar una medición y de dónde viene esa duda.</p>
+        <p class="practica__lead" data-revela>¿Qué tan seguros podemos estar de un número que acabamos de medir? Para averiguarlo medimos tiempos, longitudes y masas, y comprobamos que ninguna medición es del todo exacta: cada una trae consigo un margen de duda, al que llamamos incertidumbre.</p>
         <div class="practica__regla" aria-hidden="true"><span></span></div>
       </div>
 
@@ -156,15 +156,15 @@
           <span class="cap__num" aria-hidden="true">01</span>
           <p class="etiqueta" data-revela>Tiempo de reacción con una regla</p>
           <h3 class="cap__titulo" data-revela>Una regla que se convierte en <em>cronómetro</em></h3>
-          <p data-revela>Un compañero sostenía una regla en vertical y otro ponía los dedos abiertos a la altura del cero, sin tocarla. En cualquier momento, sin aviso, la regla se soltaba y había que atraparla lo más rápido posible.</p>
-          <p data-revela>La clave estaba en cuánto alcanzaba a caer. Como la regla cae libremente por efecto de la gravedad, la distancia recorrida dice cuánto tiempo pasó antes de cerrar los dedos: más centímetros, más tiempo. Así medimos algo tan escurridizo como un reflejo usando solo una regla.</p>
-          <p data-revela>Participamos cuatro personas, con veinte intentos cada una. Nadie reaccionó igual dos veces, y con la práctica algunos se fueron volviendo más rápidos.</p>
+          <p data-revela>Un compañero sostenía una regla en vertical, colgando desde arriba. Otro ponía el pulgar y el índice abiertos a la altura del cero, sin tocarla. En cualquier momento, sin aviso, la regla se soltaba y había que atraparla lo más rápido posible. Después se leía en la regla, a la altura de los dedos, cuánto había caído.</p>
+          <p data-revela>Esa distancia es la clave. Mientras la persona reacciona, la regla cae libremente, empujada solo por la gravedad. Cuanto más tarda en cerrar los dedos, más centímetros alcanza a recorrer. Las ecuaciones de la caída libre relacionan la distancia con el tiempo (d = ½·g·t²), así que a partir de los centímetros que cayó la regla se puede calcular el tiempo de reacción. Así, una regla común funciona como cronómetro.</p>
+          <p data-revela>Participamos cuatro personas, con veinte intentos cada una. Los resultados cambiaban de un intento a otro, incluso para la misma persona: nadie reaccionó igual dos veces, y con la práctica algunos se fueron volviendo más rápidos. Repetir tantas veces fue lo que nos permitió ver esa variación, en lugar de fiarnos de un solo intento.</p>
         </div>
 
         <div class="cap__visual">
           <figure class="caida" id="caida">
             <div class="caida__cab">
-              <span class="mono">Así lo hicimos</span>
+              <span class="mono">Así lo hicimos · cámara lenta</span>
               <span class="mono caida__estado" id="caida-estado">Sostiene la regla…</span>
             </div>
             <svg class="caida__svg" viewBox="0 0 520 520" role="img" aria-label="Animación: una persona sostiene una regla en vertical y la suelta sin aviso; la otra, con los dedos abiertos a la altura del cero, la atrapa.">
@@ -218,8 +218,9 @@
           <span class="cap__num" aria-hidden="true">02</span>
           <p class="etiqueta" data-revela>Conocer los instrumentos</p>
           <h3 class="cap__titulo" data-revela>Antes de medir, conocer <em>con qué</em> se mide</h3>
-          <p data-revela>Antes de tomar cualquier medida revisamos los tres instrumentos de la sesión: la regla, el calibrador Vernier (también llamado pie de rey) y la balanza. En cada uno buscamos el cambio más pequeño que es capaz de registrar, lo que se conoce como su apreciación.</p>
-          <p data-revela>Ese detalle marca cuánta duda trae cada medición. Ningún instrumento puede ser más preciso que su división más pequeña: lo que queda por debajo de ella, sencillamente, no lo ve.</p>
+          <p data-revela>Antes de tomar cualquier medida revisamos los tres instrumentos de la sesión: la regla, el calibrador Vernier (también llamado pie de rey) y la balanza. En cada uno buscamos su apreciación, es decir, la división más pequeña que se puede leer directamente en su escala o en su pantalla.</p>
+          <p data-revela>Ese dato importa porque fija la duda mínima de cada lectura. Lo que cae entre dos divisiones ya no se puede leer con seguridad: si una regla está marcada en milímetros, no permite afirmar décimas de milímetro.</p>
+          <p data-revela>Conviene no confundirla con otras dos ideas parecidas. La resolución es el cambio más pequeño que el instrumento alcanza a detectar, y en muchos instrumentos coincide con la apreciación. La precisión, en cambio, describe qué tan parecidos salen los resultados cuando se repite una misma medida.</p>
         </div>
 
         <div class="cap__visual">
@@ -232,7 +233,7 @@
               </svg>
               <div>
                 <h4>La regla</h4>
-                <p>La más sencilla de todas. Su división más pequeña pone el límite de lo que puede distinguir.</p>
+                <p>Mide longitudes: se alinea el cero con un extremo del objeto y se lee la marca que coincide con el otro. Su apreciación es su división más pequeña.</p>
               </div>
             </li>
             <li class="instrumento" data-revela>
@@ -249,7 +250,7 @@
               </svg>
               <div>
                 <h4>El calibrador Vernier <span>(pie de rey)</span></h4>
-                <p>Una escala deslizante que permite leer fracciones de la división principal. Mucho más fino que la regla.</p>
+                <p>Sus mordazas ajustan el objeto, y una segunda escala deslizante, el nonio, permite leer fracciones de milímetro. Por eso mide con más detalle que la regla.</p>
               </div>
             </li>
             <li class="instrumento" data-revela>
@@ -265,7 +266,7 @@
               </svg>
               <div>
                 <h4>La balanza</h4>
-                <p>Mide la masa. El valor más pequeño que muestra su pantalla define cuánta duda trae cada pesada.</p>
+                <p>Determina la masa del cuerpo que se coloca en su plato. Su apreciación es el cambio más pequeño que muestra su lectura: diferencias menores no las distingue.</p>
               </div>
             </li>
           </ul>
@@ -278,8 +279,9 @@
           <span class="cap__num" aria-hidden="true">03</span>
           <p class="etiqueta" data-revela>Medir cuerpos sólidos</p>
           <h3 class="cap__titulo" data-revela>Tres cuerpos, <em>muchas</em> lecturas</h3>
-          <p data-revela>Con el calibrador Vernier medimos tres cuerpos: un cilindro macizo, un cilindro hueco y una esfera. Tomamos las dimensiones que describen su forma, como diámetros y alturas, y con la balanza registramos la masa de cada uno.</p>
-          <p data-revela>Cada medición la repetimos varias veces, retirando el cuerpo entre una lectura y otra. Así cada lectura empezaba de cero, y las pequeñas diferencias entre una y otra mostraban qué tan estable era la medida.</p>
+          <p data-revela>Trabajamos con tres cuerpos: un cilindro macizo, un cilindro hueco y una esfera. Con el calibrador Vernier tomamos las dimensiones que describen su forma, como diámetros y alturas, y con la balanza registramos la masa de cada uno.</p>
+          <p data-revela>Cada medida la repetimos varias veces. Repetir consistía en retirar el cuerpo del instrumento, volver a colocarlo y hacer una lectura nueva, para comprobar si salía un valor parecido al anterior.</p>
+          <p data-revela>Las lecturas no eran idénticas: cambiaban un poco de una a otra, según cómo quedaba colocado el cuerpo, cómo se ajustaba el instrumento o cómo se leía la escala. Esas pequeñas diferencias muestran la variabilidad de una medida, y por eso una sola lectura no basta para confiar en un resultado.</p>
         </div>
 
         <div class="cap__visual">
@@ -335,8 +337,10 @@
           <span class="cap__num" aria-hidden="true">04</span>
           <p class="etiqueta" data-revela>De las medidas a los resultados</p>
           <h3 class="cap__titulo" data-revela>La duda <em>también</em> se hereda</h3>
-          <p data-revela>Con esas medidas calculamos el volumen de cada cuerpo según su forma y, junto con la masa, su densidad. Las medidas leídas en el instrumento son directas; las que se calculan a partir de ellas, como el volumen o la densidad, son indirectas.</p>
-          <p data-revela>Los cálculos no borran la duda: la arrastran. Si el diámetro trae un pequeño margen y la altura trae otro, el volumen los hereda a ambos. Vimos cómo la incertidumbre de cada medición directa viaja hasta los resultados y, por el camino, puede crecer.</p>
+          <p data-revela>Con las dimensiones de cada cuerpo calculamos su volumen, usando la fórmula que corresponde a su forma. Luego dividimos la masa entre ese volumen para obtener su densidad.</p>
+          <p data-revela>Aquí aparecen dos tipos de medidas. Una medida directa se lee en un instrumento, como el diámetro de un cilindro en el calibrador o su masa en la balanza. Una medida indirecta no se lee en ningún instrumento: se calcula a partir de otras, como el volumen o la densidad.</p>
+          <p data-revela>Los cálculos no borran la duda: la arrastran. El volumen de un cilindro se calcula con su diámetro y su altura. Si el diámetro puede estar un poco por encima o por debajo de lo que leímos, el volumen calculado también; y lo mismo pasa con la altura. El volumen hereda la incertidumbre de las dos medidas. A ese paso de la duda, desde las medidas directas hasta los resultados, se le llama propagación de la incertidumbre.</p>
+          <p data-revela>Por el camino, la duda incluso puede crecer. En la fórmula del cilindro el diámetro va elevado al cuadrado, así que, en proporción, su margen de duda pesa el doble en el volumen. Y la densidad, que usa la masa y el volumen, reúne la incertidumbre de todas las medidas anteriores. Por eso un resultado calculado nunca es más confiable que las medidas con las que se obtuvo.</p>
         </div>
 
         <div class="cap__visual">
@@ -407,12 +411,12 @@
             </svg>
           </div>
 
-          <p class="idea__texto">Toda medida trae una incertidumbre, y esa incertidumbre depende de tres cosas. Entenderla no es aceptar un fracaso: es justo lo que vuelve <em>confiable</em> un resultado.</p>
+          <p class="idea__texto">El error es la diferencia entre un resultado y un valor de referencia; la incertidumbre es el margen de duda que acompaña a cada medida. Estimarla es justo lo que vuelve <em>confiable</em> un resultado. En esta práctica reconocimos tres factores que influyen especialmente en ella, aunque no son los únicos:</p>
 
           <ol class="factores">
-            <li class="factor"><b>01</b><h4>El instrumento</h4><p>Su división más pequeña pone el límite de lo que se puede ver.</p></li>
-            <li class="factor"><b>02</b><h4>Quien mide</h4><p>Sus reflejos, su vista y su práctica cambian cada lectura.</p></li>
-            <li class="factor"><b>03</b><h4>El método</h4><p>Cómo, cuántas veces y en qué condiciones se toma la medida.</p></li>
+            <li class="factor"><b>01</b><h4>El instrumento</h4><p>Su apreciación y su estado ponen un límite a lo que se puede leer.</p></li>
+            <li class="factor"><b>02</b><h4>Quien mide</h4><p>Cómo usa el instrumento, cómo observa y qué tan rápido reacciona.</p></li>
+            <li class="factor"><b>03</b><h4>El método</h4><p>El procedimiento, cuántas veces se repite y en qué condiciones.</p></li>
           </ol>
         </div>
       </article>

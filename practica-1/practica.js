@@ -136,7 +136,7 @@
     }
 
     const ms = (d) => Math.round(Math.sqrt((2 * d) / 100 / G) * 1000);
-    const texto = (n, d) => `Intento ${n}: la regla alcanzó a caer <b>${coma(d)} cm</b> antes de que la mano se cerrara. Eso equivale a unos <b>${ms(d)} ms</b> de reacción.`;
+    const texto = (n, d) => `Intento de ejemplo ${n}: la regla alcanzó a caer <b>${coma(d)} cm</b> antes de ser atrapada. Con la caída libre, eso equivale a unos <b>${ms(d)} ms</b> de reacción.`;
     const ponerCota = (d) => {
       const y = CERO + d * PX;
       cotaLinea.setAttribute("y2", y);
@@ -555,13 +555,28 @@
         .fromTo(".factor", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: "power3.out" }, "-=0.4");
     };
 
-    const mm = gsap.matchMedia();
-    mm.add("(min-width: 900px) and (min-height: 700px)", () => {
-      lineaIdea({ trigger: ".idea", start: "top top", end: "+=150%", scrub: 1, pin: ".idea__fijo", anticipatePin: 1, refreshPriority: 1 });
-    });
-    mm.add("(max-width: 899px), (max-height: 699px)", () => {
-      lineaIdea({ trigger: ".idea", start: "top 65%" });
-    });
+    // Se fija solo si todo su contenido cabe en la pantalla; si no, se revela al llegar.
+    const fijo = $(".idea__fijo");
+    const cabeIdea = () => {
+      const fin = Math.max(...$$(":scope > :not(.cap__num)", fijo).map((c) => c.offsetTop + c.offsetHeight));
+      return fin <= window.innerHeight;
+    };
+    let idea = null;
+    const montarIdea = () => {
+      const fijar = window.innerWidth >= 900 && cabeIdea();
+      if (idea && idea.fijada === fijar) return;
+      const habia = !!idea;
+      if (idea) { idea.tl.scrollTrigger.kill(true); idea.tl.kill(); }
+      const tl = lineaIdea(fijar
+        ? { trigger: ".idea", start: "top top", end: "+=150%", scrub: 1, pin: fijo, anticipatePin: 1, refreshPriority: 1 }
+        : { trigger: ".idea", start: "top 65%" });
+      idea = { tl, fijada: fijar };
+      if (habia) ScrollTrigger.refresh();
+    };
+    montarIdea();
+    let esperaIdea = null;
+    window.addEventListener("resize", () => { clearTimeout(esperaIdea); esperaIdea = setTimeout(montarIdea, 200); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(montarIdea);
 
     // Recalcular al cargar las fuentes (cambian alturas)
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => ScrollTrigger.refresh());
