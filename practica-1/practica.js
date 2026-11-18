@@ -414,7 +414,7 @@
     if (manifiesto) {
       const palabras = partirPalabras(manifiesto);
       // La cabecera se queda fija una pantalla mientras todo el texto se enciende
-      gsap.timeline({ scrollTrigger: { trigger: ".hicimos__cab", start: "top top", end: "+=75%", scrub: 0.5, pin: true, anticipatePin: 1 } })
+      gsap.timeline({ scrollTrigger: { trigger: ".hicimos__cab", start: "top top", end: "+=75%", scrub: 0.5, pin: true, anticipatePin: 1, refreshPriority: 2 } })
         .to(palabras, { opacity: 1, ease: "none", stagger: 0.1, duration: 0.3 })
         .to({}, { duration: 0.5 });
     }
@@ -529,7 +529,7 @@
 
     const mm = gsap.matchMedia();
     mm.add("(min-width: 900px) and (min-height: 700px)", () => {
-      lineaIdea({ trigger: ".idea", start: "top top", end: "+=150%", scrub: 1, pin: ".idea__fijo", anticipatePin: 1 });
+      lineaIdea({ trigger: ".idea", start: "top top", end: "+=150%", scrub: 1, pin: ".idea__fijo", anticipatePin: 1, refreshPriority: 1 });
     });
     mm.add("(max-width: 899px), (max-height: 699px)", () => {
       lineaIdea({ trigger: ".idea", start: "top 65%" });

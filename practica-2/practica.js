@@ -319,7 +319,8 @@
     const agua = $("#tanque-agua");
     const SUP = 150;
     const sup = (x, t) => SUP + 4 * Math.sin(x / 40 + t * 1.6) + 2 * Math.sin(x / 17 - t * 2.1);
-    const pos = { my: -60, ky: -60, flota: 0 };
+    const ARRIBA = -14; // desde donde caen, justo encima del tanque
+    const pos = { my: ARRIBA, ky: ARRIBA, flota: 0 };
     const pintar = (t) => {
       agua.setAttribute("d", onda(40, 480, 10, (x) => sup(x, t), 350));
       const balanceo = pos.flota ? Math.sin(t * 1.5) * 3 : 0;
@@ -328,10 +329,10 @@
     };
     const fuerzas = $$(".fuerza", svg);
     if (!animar) { pos.my = SUP + 4; pos.ky = 314; pos.flota = 1; pintar(1); return; }
-    gsap.set(fuerzas, { opacity: 0 });
+    gsap.set([...fuerzas, madera, metal], { opacity: 0 });
     const tl = gsap.timeline({ repeat: -1, paused: true })
       .call(() => { estado.textContent = "Dos cuerpos del mismo tamaño caen al agua…"; pos.flota = 0; })
-      .set(pos, { my: -60, ky: -60 })
+      .set(pos, { my: ARRIBA, ky: ARRIBA })
       .to([madera, metal], { opacity: 1, duration: 0.3 })
       .to(pos, { my: SUP - 30, duration: 0.7, ease: "power2.in" })
       .to(pos, { my: SUP + 4, duration: 1.4, ease: "elastic.out(1, 0.35)" })
@@ -475,10 +476,32 @@
       gsap.to(el, { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.1, ease: "power3.out", scrollTrigger: { trigger: el, start: "top 90%" } });
     });
 
-    // Lo que hicimos: el texto se llena como un vaso mientras la sección queda fija
-    gsap.timeline({ scrollTrigger: { trigger: ".hicimos__cab", start: "top top", end: "+=80%", scrub: 0.6, pin: true, anticipatePin: 1 } })
+    // Portada: al bajar, el nombre se hunde despacio y se desvanece
+    const salida = { trigger: ".portada", start: "top top", end: "bottom top", scrub: true };
+    gsap.to(".portada__centro", { y: 140, opacity: 0.1, ease: "none", scrollTrigger: salida });
+    gsap.to(".portada__pie", { opacity: 0, ease: "none", scrollTrigger: { ...salida, end: "30% top" } });
+
+    // Título: la columna flota en sentido contrario al scroll
+    gsap.fromTo(".columna", { yPercent: 10 }, { yPercent: -10, ease: "none", scrollTrigger: { trigger: ".practica", start: "top bottom", end: "bottom top", scrub: true } });
+
+    // Lo que hicimos: el texto se llena como un vaso mientras la sección queda fija.
+    // refreshPriority: las secciones fijadas se calculan antes que el resto, así lo que
+    // viene después aparece justo cuando entra en pantalla y no antes.
+    gsap.timeline({ scrollTrigger: { trigger: ".hicimos__cab", start: "top top", end: "+=80%", scrub: 0.6, pin: true, anticipatePin: 1, refreshPriority: 2 } })
       .to("#manifiesto", { backgroundPosition: "0 100%", ease: "none", duration: 1 })
       .to({}, { duration: 0.35 });
+
+    // Escenas de cada capa: un parallax suave que acompaña el scroll
+    // (yPercent mueve la figura con su pie de foto; la entrada del cubo usa y, no chocan).
+    // Solo en pantallas anchas, donde cada figura tiene su propia columna.
+    gsap.matchMedia().add("(min-width: 900px)", () => {
+      $$(".capa__rejilla > figure").forEach((fig) => {
+        gsap.fromTo(fig, { yPercent: 10 }, { yPercent: -10, ease: "none", scrollTrigger: { trigger: fig.closest(".capa"), start: "top bottom", end: "bottom top", scrub: true } });
+      });
+    });
+    $$(".lupa svg").forEach((svg, i) => {
+      gsap.fromTo(svg, { rotate: i ? 10 : -10 }, { rotate: i ? -10 : 10, ease: "none", scrollTrigger: { trigger: ".lupas", start: "top bottom", end: "bottom top", scrub: true } });
+    });
 
     // Capa 2: las rectas se dibujan con el scroll
     $$("[data-recta]").forEach((r) => {
@@ -494,11 +517,49 @@
     const mm = gsap.matchMedia();
     mm.add("(min-width: 900px)", () => {
       const carril = $("#carril"), fijo = $(".capa3__fijo");
+      const metodos = $$(".metodo", carril);
+      const pasos = $$(".guia__paso");
+      const relleno = $(".guia__linea i");
+      const n = metodos.length;
       const distancia = () => Math.max(0, carril.scrollWidth - (fijo.clientWidth - 2 * parseFloat(getComputedStyle(fijo).paddingLeft)));
-      gsap.to(carril, {
+      // El método que está al frente se ve pleno; los otros, atenuados.
+      const pintarGuia = (p) => {
+        const actual = p * (n - 1);
+        metodos.forEach((m, i) => { m.style.opacity = (1 - Math.min(1, Math.abs(actual - i)) * 0.6).toFixed(3); });
+        pasos.forEach((s, i) => s.classList.toggle("activo", Math.round(actual) === i));
+        if (relleno) relleno.style.transform = `scaleX(${p.toFixed(4)})`;
+      };
+      const tween = gsap.to(carril, {
         x: () => -distancia(), ease: "none",
-        scrollTrigger: { trigger: fijo, start: "top top", end: () => `+=${distancia()}`, scrub: 0.7, pin: true, anticipatePin: 1, invalidateOnRefresh: true },
+        onUpdate() { pintarGuia(this.progress()); },
+        scrollTrigger: { trigger: fijo, start: "top top", end: () => `+=${distancia()}`, scrub: 0.7, pin: true, anticipatePin: 1, invalidateOnRefresh: true, refreshPriority: 1 },
       });
+      const st = tween.scrollTrigger;
+      pintarGuia(0);
+
+      // Imán suave: si el scroll se detiene entre dos métodos, termina de llevar al más cercano.
+      let espera = null;
+      const iman = () => {
+        clearTimeout(espera);
+        espera = setTimeout(() => {
+          if (!st.isActive) return;
+          const paso = Math.round(st.progress * (n - 1)) / (n - 1);
+          const destino = st.start + paso * (st.end - st.start);
+          if (Math.abs(destino - scrollY) > 6) C.irA(destino, { duration: 0.9 });
+        }, 220);
+      };
+      if (C.lenis) C.lenis.on("scroll", iman);
+      // Clic en la guía: ir a ese método
+      pasos.forEach((s, i) => {
+        s.onclick = () => C.irA(st.start + (i / (n - 1)) * (st.end - st.start), { duration: 1.2 });
+      });
+
+      return () => {
+        clearTimeout(espera);
+        if (C.lenis) C.lenis.off("scroll", iman);
+        metodos.forEach((m) => { m.style.opacity = ""; });
+        pasos.forEach((s) => { s.onclick = null; });
+      };
     });
 
     // Capa 1: el cubo entra flotando; capa 4: las lupas se acercan

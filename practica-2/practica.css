@@ -258,6 +258,7 @@ body { background: var(--tinta); }
   line-height: 0.82;
   letter-spacing: -0.03em;
   color: #0b3b4f;
+  margin-bottom: 0.14em; /* deja sitio a la cola de la «q» */
 }
 .hicimos__manifiesto {
   max-width: 34ch;
@@ -475,7 +476,45 @@ figure figcaption.mono { max-width: 44ch; margin: 0.8rem auto 0; color: var(--fg
 .balanza__pantalla { fill: #071a30; stroke: var(--fg2); }
 .balanza__txt { font: 12px var(--mono); fill: var(--ac); text-anchor: middle; }
 
+/* Guía del carril: en qué camino vas */
+.guia {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  width: min(560px, 100%);
+  padding-top: 0.9rem;
+}
+.guia__linea { position: absolute; left: 0; right: 0; top: 0; height: 2px; background: var(--borde); border-radius: 2px; overflow: hidden; }
+.guia__linea i { display: block; height: 100%; background: var(--ac); transform: scaleX(0); transform-origin: left; }
+.guia__paso {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 0.2rem 0;
+  font: 0.7rem var(--mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg2);
+  cursor: pointer;
+  transition: color 0.3s;
+}
+.guia__paso::before {
+  content: "";
+  display: inline-block;
+  width: 7px; height: 7px;
+  margin-right: 0.55em;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  vertical-align: 0.05em;
+  transition: background 0.3s;
+}
+.guia__paso:hover { color: var(--fg); }
+.guia__paso.activo { color: var(--ac); }
+.guia__paso.activo::before { background: currentColor; }
+.js .metodo { will-change: opacity; }
+
 @media (max-width: 900px) {
+  .guia { display: none; }
   .carril { flex-direction: column; width: 100%; }
   .metodo { width: 100%; grid-template-columns: 1fr; }
   .metodo__visual { height: 260px; }

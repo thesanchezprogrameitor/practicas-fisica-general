@@ -19,7 +19,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="../assets/css/comun.css?v=4">
-  <link rel="stylesheet" href="practica.css?v=1">
+  <link rel="stylesheet" href="practica.css?v=2">
 
   <script>
     (function () {
@@ -35,7 +35,7 @@
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
   <script defer src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
   <script defer src="../assets/js/comun.js?v=4"></script>
-  <script defer src="practica.js?v=1"></script>
+  <script defer src="practica.js?v=2"></script>
 </head>
 <body>
   <a class="sr-only" href="#lo-que-hicimos">Saltar a «Lo que hicimos»</a>
@@ -120,7 +120,7 @@
           <span class="practica__t2" data-flota>y proporcionalidad</span>
           <span class="practica__t3" data-sube>en sólidos y líquidos</span>
         </h1>
-        <p class="practica__lead" data-sube>Pesamos, medimos y sumergimos sólidos y líquidos para entender por qué cada material tiene su propia densidad, y por qué esa propiedad no cambia aunque cambie el tamaño de la muestra.</p>
+        <p class="practica__lead" data-sube>Pesamos sólidos y líquidos, medimos sus volúmenes y sumergimos piezas en agua para entender por qué cada material tiene su propia densidad, y por qué esa propiedad no cambia aunque cambie el tamaño de la muestra.</p>
       </div>
 
       <figure class="columna" aria-hidden="true">
@@ -178,7 +178,7 @@
           <h3 class="capa__titulo" data-flota>Cuánta materia cabe en cada espacio</h3>
         </header>
         <div class="capa__texto">
-          <p data-sube>La densidad compara la masa de un cuerpo con el volumen que ocupa: se obtiene al dividir una entre la otra.</p>
+          <p data-sube>La densidad compara la masa de un cuerpo con el volumen que ocupa: se obtiene dividiendo la masa entre el volumen.</p>
           <div class="formula" data-sube>
             <span class="formula__rho">ρ</span><span class="formula__igual">=</span>
             <span class="formula__frac"><span>m</span><span>V</span></span>
@@ -225,8 +225,8 @@
           <h3 class="capa__titulo" data-flota>Masa y volumen crecen juntos</h3>
         </header>
         <div class="capa__texto">
-          <p data-sube>Si se duplica el volumen de un mismo material, su masa también se duplica; si se triplica, se triplica. Esa relación se llama proporcionalidad directa.</p>
-          <p data-sube>En una gráfica de masa contra volumen, cada material dibuja una línea recta que sale del origen. La inclinación de esa recta es la constante de proporcionalidad, y esa constante es justamente la densidad: cuanto más empinada la recta, más denso el material.</p>
+          <p data-sube>Si se duplica el volumen de un mismo material, su masa también se duplica; si se triplica, la masa se triplica. Esa relación se llama proporcionalidad directa.</p>
+          <p data-sube>En una gráfica de masa contra volumen, cada material dibuja una línea recta que sale del origen. La inclinación de esa recta es la constante de proporcionalidad, y esa constante es justamente la densidad: cuanto más empinada es la recta, más denso es el material.</p>
         </div>
         <figure class="grafica" aria-hidden="true">
           <svg viewBox="0 0 480 400" id="grafica">
@@ -261,8 +261,8 @@
       <div class="capa3__fijo">
         <header class="capa3__cab">
           <p class="capa__num mono" data-sube><b>Capa 03</b> Tres formas de obtener el volumen</p>
-          <h3 class="capa__titulo" data-flota>La masa se pesa. El volumen hay que ingeniárselo</h3>
-          <p class="capa3__intro" data-sube>La balanza da la masa directamente, pero el volumen depende de la forma del cuerpo y de su estado. Usamos tres caminos.</p>
+          <h3 class="capa__titulo" data-flota>La masa se pesa. El volumen hay que ingeniárselo.</h3>
+          <p class="capa3__intro" data-sube>La balanza da la masa directamente. El volumen, en cambio, se obtiene de distinta forma según el cuerpo sea regular, irregular o líquido. Usamos tres caminos.</p>
         </header>
 
         <div class="carril" id="carril">
@@ -309,7 +309,7 @@
             <div class="metodo__texto">
               <p class="metodo__n mono">Camino 2</p>
               <h4>Por inmersión</h4>
-              <p>Al sumergir un sólido en una probeta con agua, el nivel sube. El volumen de agua desplazada es exactamente el volumen del sólido, y funciona incluso con formas irregulares.</p>
+              <p>Al sumergir un sólido en una probeta con agua, el nivel sube. Lo que sube el agua es exactamente el volumen del sólido, así que sirve incluso para piedras y piezas de forma irregular.</p>
             </div>
           </article>
 
@@ -332,9 +332,16 @@
             <div class="metodo__texto">
               <p class="metodo__n mono">Camino 3</p>
               <h4>Con picnómetro</h4>
-              <p>Para los líquidos se usa un frasco de volumen conocido y muy preciso. Se pesa vacío y lleno: la diferencia es la masa del líquido y, como el volumen ya se conoce, la densidad sale directa. Su tapón tiene un capilar por donde escapa el exceso, así el volumen siempre es el mismo.</p>
+              <p>Para los líquidos se usa un frasco de volumen conocido y muy preciso. Su tapón tiene un capilar por donde sale el exceso, así que siempre guarda el mismo volumen. Se pesa vacío y lleno: la diferencia es la masa del líquido y, como el volumen ya se conoce, la densidad se calcula de inmediato.</p>
             </div>
           </article>
+        </div>
+
+        <div class="guia" aria-hidden="true">
+          <span class="guia__linea"><i></i></span>
+          <button type="button" class="guia__paso" tabindex="-1">Geométrica</button>
+          <button type="button" class="guia__paso" tabindex="-1">Inmersión</button>
+          <button type="button" class="guia__paso" tabindex="-1">Picnómetro</button>
         </div>
       </div>
     </section>
