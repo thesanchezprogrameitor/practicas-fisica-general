@@ -195,9 +195,11 @@
   min-height: 100vh;
   min-height: 100svh;
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  /* El texto ocupa lo que necesita y el radar se centra en el espacio que queda;
+     el hueco central es igual al margen de los lados */
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
   align-items: center;
-  gap: clamp(2rem, 5vw, 6rem);
+  gap: max(2rem, var(--lado));
   padding: clamp(5rem, 11vh, 7rem) var(--lado) clamp(3rem, 7vh, 5rem);
   border-top: 1px solid var(--linea);
   overflow: hidden;
