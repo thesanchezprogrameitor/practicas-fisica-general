@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Práctica 2 · Densidad y proporcionalidad | Física General UNAD</title>
+  <meta name="description" content="Práctica 2 de Física General, UNAD: densidad y proporcionalidad en sólidos y líquidos. Un proyecto traído por el estudiante Leonardo Sánchez.">
+  <meta name="author" content="Leonardo Sánchez">
+  <meta name="theme-color" content="#e7efeb">
+  <meta name="color-scheme" content="light">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_CO">
+  <meta property="og:title" content="Práctica 2 · Densidad y proporcionalidad en sólidos y líquidos">
+  <meta property="og:description" content="Física General · UNAD · Un proyecto traído por el estudiante Leonardo Sánchez.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23e7efeb'/><text x='32' y='46' font-family='Arial,sans-serif' font-weight='800' font-size='40' text-anchor='middle' fill='%23176a7c'>ρ</text></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../assets/css/comun.css?v=4">
+  <link rel="stylesheet" href="practica.css?v=1">
+
+  <script>
+    (function () {
+      var h = document.documentElement;
+      h.classList.add("js");
+      try { if (sessionStorage.getItem("telon") === "1") h.classList.add("telon-entrada"); } catch (e) {}
+      setTimeout(function () {
+        if (!h.classList.contains("listo")) { h.classList.remove("js"); h.classList.remove("telon-entrada"); var t = document.querySelector(".telon"); if (t) t.style.display = "none"; }
+      }, 4000);
+    })();
+  </script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script defer src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script defer src="../assets/js/comun.js?v=4"></script>
+  <script defer src="practica.js?v=1"></script>
+</head>
+<body>
+  <a class="sr-only" href="#lo-que-hicimos">Saltar a «Lo que hicimos»</a>
+
+  <div class="grano" aria-hidden="true"></div>
+  <div class="telon" aria-hidden="true"></div>
+  <div class="cursor" aria-hidden="true"><span class="cursor__coord"></span></div>
+
+  <div class="carga" aria-hidden="true">
+    <div class="carga__fila">
+      <span class="carga__texto">Llenando el picnómetro…</span>
+      <span class="carga__num"><b>000</b><small>%</small></span>
+    </div>
+    <div class="carga__barra"><span></span></div>
+  </div>
+
+  <div class="progreso" aria-hidden="true"><span></span></div>
+
+  <header class="barra">
+    <a class="barra__marca" href="../"><i class="barra__punto"></i><b>Prácticas</b><span>de laboratorio</span></a>
+    <nav class="barra__nav" aria-label="Secciones">
+      <a href="#portada" class="ocultar-movil">Inicio</a>
+      <a href="#practica" class="ocultar-movil">Práctica 2</a>
+      <a href="#lo-que-hicimos">Lo que hicimos</a>
+    </nav>
+  </header>
+
+  <!-- Profundímetro: dónde estás dentro de la columna -->
+  <nav class="profundidad" aria-label="Capas">
+    <span class="profundidad__burbuja" aria-hidden="true"></span>
+    <a href="#capa-1"><i></i><span>Qué es la densidad</span></a>
+    <a href="#capa-2"><i></i><span>Proporcionalidad</span></a>
+    <a href="#capa-3"><i></i><span>El volumen</span></a>
+    <a href="#capa-4"><i></i><span>Por dentro</span></a>
+    <a href="#capa-5"><i></i><span>Flotación</span></a>
+    <a href="#capa-6"><i></i><span>El ambiente</span></a>
+    <a href="#idea"><i></i><span>La idea central</span></a>
+  </nav>
+
+  <main>
+    <!-- =====================================================
+         PORTADA
+         ===================================================== -->
+    <section id="portada" class="banda portada">
+      <canvas class="burbujas" data-color="23,106,124" data-cantidad="38" aria-hidden="true"></canvas>
+
+      <div class="portada__centro">
+        <p class="portada__ceja" data-sube>Este proyecto es traído a ustedes por el estudiante</p>
+        <p class="portada__nombre" data-flota>Leonardo Sánchez</p>
+        <p class="portada__curso" data-sube>Física General</p>
+      </div>
+
+      <div class="portada__pie">
+        <p class="portada__uni mono" data-sube>Universidad Nacional Abierta y a Distancia</p>
+        <a class="portada__bajar" href="#practica" data-sube>
+          <span class="mono">Sumérgete</span>
+          <span class="portada__gota" aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div class="portada__agua" aria-hidden="true">
+        <svg viewBox="0 0 1440 220" preserveAspectRatio="none">
+          <path class="agua__fondo" id="agua-atras" d=""/>
+          <g id="flotador">
+            <rect x="-38" y="-24" width="76" height="48" rx="5" class="madera"/>
+            <path d="M-30 -10 C -10 -16, 10 -4, 30 -12 M-30 4 C -8 -2, 12 10, 30 2" class="veta"/>
+          </g>
+          <path class="agua__frente" id="agua-frente" d=""/>
+          <circle cx="0" cy="0" r="20" class="metal" id="hundido" transform="translate(1150 196)"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- =====================================================
+         PRÁCTICA (título)
+         ===================================================== -->
+    <section id="practica" class="banda practica">
+      <div class="practica__texto">
+        <p class="etiqueta-p2" data-sube>Práctica 2</p>
+        <h1 class="practica__titulo">
+          <span class="practica__t1" data-flota>Densidad</span>
+          <span class="practica__t2" data-flota>y proporcionalidad</span>
+          <span class="practica__t3" data-sube>en sólidos y líquidos</span>
+        </h1>
+        <p class="practica__lead" data-sube>Pesamos, medimos y sumergimos sólidos y líquidos para entender por qué cada material tiene su propia densidad, y por qué esa propiedad no cambia aunque cambie el tamaño de la muestra.</p>
+      </div>
+
+      <figure class="columna" aria-hidden="true">
+        <svg viewBox="0 0 360 560" id="columna">
+          <defs>
+            <clipPath id="vaso-clip"><path d="M96 70 V500 Q96 530 126 530 H234 Q264 530 264 500 V70 Z"/></clipPath>
+          </defs>
+          <g clip-path="url(#vaso-clip)">
+            <path class="liq liq--alcohol" id="liq-0" d=""/>
+            <path class="liq liq--aceite" id="liq-1" d=""/>
+            <path class="liq liq--agua" id="liq-2" d=""/>
+            <path class="liq liq--miel" id="liq-3" d=""/>
+            <g id="columna-burbujas"></g>
+            <g class="obj" id="obj-corcho"><rect x="-17" y="-11" width="34" height="22" rx="6" class="corcho"/></g>
+            <g class="obj" id="obj-uva"><circle r="13" class="uva"/></g>
+            <g class="obj" id="obj-tuerca"><path d="M-17 0 L-8.5 -14.7 L8.5 -14.7 L17 0 L8.5 14.7 L-8.5 14.7 Z" class="tuerca"/><circle r="6" class="tuerca-hueco"/></g>
+          </g>
+          <path class="vaso" d="M96 50 V500 Q96 530 126 530 H234 Q264 530 264 500 V50"/>
+          <path class="vaso-brillo" d="M112 90 V480"/>
+          <g class="columna__etq">
+            <text x="282" y="150">alcohol</text>
+            <text x="282" y="262">aceite</text>
+            <text x="282" y="370">agua</text>
+            <text x="282" y="470">miel</text>
+          </g>
+          <g class="columna__escala">
+            <path d="M40 120 V500"/>
+            <path d="M33 485 L40 500 L47 485"/>
+            <text x="40" y="100">menos denso</text>
+            <text x="40" y="524">más denso</text>
+          </g>
+        </svg>
+      </figure>
+    </section>
+
+    <!-- =====================================================
+         LO QUE HICIMOS
+         ===================================================== -->
+    <section id="lo-que-hicimos" class="banda hicimos">
+      <div class="ola" aria-hidden="true"></div>
+      <div class="hicimos__cab">
+        <p class="etiqueta-p2" data-sube>Sección 02</p>
+        <h2 class="hicimos__titulo" data-flota>Lo que hicimos</h2>
+        <p class="hicimos__manifiesto" id="manifiesto">Prismas, esferas, piezas de madera y de metal, y un par de líquidos. Con una balanza, una probeta y un picnómetro descubrimos que cada material guarda una relación fija entre su masa y el espacio que ocupa. Esa relación tiene nombre: densidad.</p>
+        <p class="hicimos__pista mono" data-sube>Cada sección es una capa más profunda de la columna ↓</p>
+      </div>
+    </section>
+
+    <!-- ---------- Capa 1 · Qué es la densidad ---------- -->
+    <section id="capa-1" class="banda capa capa--1">
+      <div class="ola" aria-hidden="true"></div>
+      <div class="capa__rejilla">
+        <header class="capa__cab">
+          <p class="capa__num mono" data-sube><b>Capa 01</b> Qué es la densidad</p>
+          <h3 class="capa__titulo" data-flota>Cuánta materia cabe en cada espacio</h3>
+        </header>
+        <div class="capa__texto">
+          <p data-sube>La densidad compara la masa de un cuerpo con el volumen que ocupa: se obtiene al dividir una entre la otra.</p>
+          <div class="formula" data-sube>
+            <span class="formula__rho">ρ</span><span class="formula__igual">=</span>
+            <span class="formula__frac"><span>m</span><span>V</span></span>
+            <dl class="formula__leyenda">
+              <div><dt>ρ</dt><dd>densidad</dd></div>
+              <div><dt>m</dt><dd>masa</dd></div>
+              <div><dt>V</dt><dd>volumen</dd></div>
+            </dl>
+          </div>
+          <p data-sube>Lo valioso es que no depende del tamaño. Un clavo y una viga del mismo hierro tienen la misma densidad, porque cuando crece el volumen la masa crece en la misma medida. Por eso funciona como una huella: permite reconocer de qué está hecho un objeto, sea una muestra pequeña o una pieza enorme.</p>
+        </div>
+        <figure class="cubo-escena" aria-hidden="true">
+          <svg viewBox="0 0 460 360">
+            <ellipse class="sombra" cx="170" cy="318" rx="120" ry="14" id="cubo-sombra"/>
+            <g id="cubo">
+              <path class="cara cara--sup" d="M0 -60 L52 -90 L104 -60 L52 -30 Z"/>
+              <path class="cara cara--izq" d="M0 -60 L52 -30 L52 30 L0 0 Z"/>
+              <path class="cara cara--der" d="M52 -30 L104 -60 L104 0 L52 30 Z"/>
+            </g>
+            <g class="medidor" transform="translate(330 70)">
+              <text class="medidor__k" x="0" y="0">masa</text>
+              <rect class="medidor__fondo" x="0" y="10" width="110" height="10" rx="5"/>
+              <rect class="medidor__barra" id="barra-m" x="0" y="10" width="40" height="10" rx="5"/>
+              <text class="medidor__k" x="0" y="60">volumen</text>
+              <rect class="medidor__fondo" x="0" y="70" width="110" height="10" rx="5"/>
+              <rect class="medidor__barra" id="barra-v" x="0" y="70" width="40" height="10" rx="5"/>
+              <text class="medidor__k" x="0" y="120">densidad</text>
+              <rect class="medidor__fondo" x="0" y="130" width="110" height="10" rx="5"/>
+              <rect class="medidor__barra medidor__barra--rho" id="barra-rho" x="0" y="130" width="72" height="10" rx="5"/>
+              <text class="medidor__nota" x="0" y="166">no cambia</text>
+            </g>
+          </svg>
+          <figcaption class="mono">El cubo crece y se encoge: la masa y el volumen cambian, la densidad no.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ---------- Capa 2 · Proporcionalidad ---------- -->
+    <section id="capa-2" class="banda capa capa--2">
+      <div class="ola" aria-hidden="true"></div>
+      <div class="capa__rejilla capa__rejilla--invertida">
+        <header class="capa__cab">
+          <p class="capa__num mono" data-sube><b>Capa 02</b> Proporcionalidad directa</p>
+          <h3 class="capa__titulo" data-flota>Masa y volumen crecen juntos</h3>
+        </header>
+        <div class="capa__texto">
+          <p data-sube>Si se duplica el volumen de un mismo material, su masa también se duplica; si se triplica, se triplica. Esa relación se llama proporcionalidad directa.</p>
+          <p data-sube>En una gráfica de masa contra volumen, cada material dibuja una línea recta que sale del origen. La inclinación de esa recta es la constante de proporcionalidad, y esa constante es justamente la densidad: cuanto más empinada la recta, más denso el material.</p>
+        </div>
+        <figure class="grafica" aria-hidden="true">
+          <svg viewBox="0 0 480 400" id="grafica">
+            <g class="grafica__rejilla" id="grafica-rejilla"></g>
+            <path class="grafica__eje" d="M60 350 H450 M60 350 V30"/>
+            <path class="grafica__flecha" d="M444 344 L452 350 L444 356 M54 36 L60 28 L66 36"/>
+            <text class="grafica__k" x="450" y="378">volumen</text>
+            <text class="grafica__k grafica__k--y" x="22" y="40">masa</text>
+            <path class="recta recta--hierro" data-recta d="M60 350 L230 40"/>
+            <path class="recta recta--aluminio" data-recta d="M60 350 L440 104"/>
+            <path class="recta recta--madera" data-recta d="M60 350 L440 280"/>
+            <text class="recta__etq recta__etq--hierro" x="238" y="44">hierro</text>
+            <text class="recta__etq recta__etq--aluminio" x="408" y="96">aluminio</text>
+            <text class="recta__etq recta__etq--madera" x="408" y="270">madera</text>
+            <g class="pendiente" id="pendiente">
+              <path d="M250 227 H330 V175"/>
+              <text x="290" y="246">ΔV</text>
+              <text x="340" y="206">Δm</text>
+            </g>
+            <circle class="punto punto--hierro" r="6" id="punto-0"/>
+            <circle class="punto punto--aluminio" r="6" id="punto-1"/>
+            <circle class="punto punto--madera" r="6" id="punto-2"/>
+          </svg>
+          <figcaption class="mono">La pendiente de cada recta es su densidad.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ---------- Capa 3 · Tres formas de obtener el volumen ---------- -->
+    <section id="capa-3" class="banda capa capa--3">
+      <div class="ola" aria-hidden="true"></div>
+      <div class="capa3__fijo">
+        <header class="capa3__cab">
+          <p class="capa__num mono" data-sube><b>Capa 03</b> Tres formas de obtener el volumen</p>
+          <h3 class="capa__titulo" data-flota>La masa se pesa. El volumen hay que ingeniárselo</h3>
+          <p class="capa3__intro" data-sube>La balanza da la masa directamente, pero el volumen depende de la forma del cuerpo y de su estado. Usamos tres caminos.</p>
+        </header>
+
+        <div class="carril" id="carril">
+          <article class="metodo">
+            <div class="metodo__visual metodo__visual--geo" aria-hidden="true">
+              <div class="prisma3d"><i class="f1"></i><i class="f2"></i><i class="f3"></i><i class="f4"></i><i class="f5"></i><i class="f6"></i></div>
+              <svg viewBox="0 0 160 160" class="esfera">
+                <circle cx="80" cy="80" r="62" class="esfera__borde"/>
+                <ellipse cx="80" cy="80" rx="62" ry="16" class="esfera__ecuador"/>
+                <ellipse cx="80" cy="80" rx="20" ry="62" class="esfera__meridiano" id="meridiano"/>
+                <path d="M80 80 H142" class="esfera__radio"/>
+                <text x="111" y="73" class="esfera__r">r</text>
+              </svg>
+            </div>
+            <div class="metodo__texto">
+              <p class="metodo__n mono">Camino 1</p>
+              <h4>Geométrica</h4>
+              <p>Para cuerpos de forma regular, como el prisma y la esfera, basta con medir sus dimensiones y aplicar la fórmula de su forma.</p>
+              <ul class="metodo__formulas">
+                <li><span>Prisma</span><code>V = largo × ancho × alto</code></li>
+                <li><span>Esfera</span><code>V = 4⁄3 · π · r³</code></li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="metodo">
+            <div class="metodo__visual" aria-hidden="true">
+              <svg viewBox="0 0 240 330" class="probeta">
+                <defs><clipPath id="probeta-clip"><rect x="80" y="40" width="80" height="262" rx="4"/></clipPath></defs>
+                <g class="probeta__marcas" id="probeta-marcas"></g>
+                <g clip-path="url(#probeta-clip)">
+                  <rect class="probeta__agua" id="probeta-agua" x="80" y="180" width="80" height="140"/>
+                </g>
+                <path class="hilo" id="piedra-hilo" d="M120 0 V60"/>
+                <path class="piedra" id="piedra" d="M100 52 C 96 40, 112 30, 124 34 C 138 30, 146 44, 140 56 C 146 68, 130 78, 116 74 C 102 78, 94 64, 100 52 Z"/>
+                <path class="probeta__vidrio" d="M70 34 H170 M80 34 V298 Q80 306 88 306 H152 Q160 306 160 298 V34"/>
+                <path class="probeta__base" d="M60 306 H180"/>
+                <g class="delta" id="delta">
+                  <path d="M176 180 H190 V150 H176" id="delta-llave"/>
+                  <text x="196" y="170">ΔV</text>
+                </g>
+              </svg>
+            </div>
+            <div class="metodo__texto">
+              <p class="metodo__n mono">Camino 2</p>
+              <h4>Por inmersión</h4>
+              <p>Al sumergir un sólido en una probeta con agua, el nivel sube. El volumen de agua desplazada es exactamente el volumen del sólido, y funciona incluso con formas irregulares.</p>
+            </div>
+          </article>
+
+          <article class="metodo">
+            <div class="metodo__visual" aria-hidden="true">
+              <svg viewBox="0 0 260 330" class="picno">
+                <defs><clipPath id="picno-clip"><path d="M130 70 C 128 96, 70 118, 70 190 C 70 250, 100 272, 130 272 C 160 272, 190 250, 190 190 C 190 118, 132 96, 130 70 Z"/></clipPath></defs>
+                <g clip-path="url(#picno-clip)">
+                  <rect class="picno__liq" id="picno-liq" x="60" y="272" width="140" height="210"/>
+                </g>
+                <path class="picno__vidrio" d="M122 70 C 120 96, 70 118, 70 190 C 70 250, 100 272, 130 272 C 160 272, 190 250, 190 190 C 190 118, 140 96, 138 70"/>
+                <rect class="picno__tapon" id="picno-tapon" x="118" y="34" width="24" height="40" rx="5"/>
+                <path class="picno__capilar" d="M130 34 V74"/>
+                <circle class="picno__gota" id="picno-gota" cx="130" cy="30" r="0"/>
+                <path class="balanza" d="M54 284 H206 L220 314 H40 Z"/>
+                <rect class="balanza__pantalla" x="104" y="292" width="52" height="16" rx="3"/>
+                <text class="balanza__txt" id="picno-m" x="130" y="304">m₁</text>
+              </svg>
+            </div>
+            <div class="metodo__texto">
+              <p class="metodo__n mono">Camino 3</p>
+              <h4>Con picnómetro</h4>
+              <p>Para los líquidos se usa un frasco de volumen conocido y muy preciso. Se pesa vacío y lleno: la diferencia es la masa del líquido y, como el volumen ya se conoce, la densidad sale directa. Su tapón tiene un capilar por donde escapa el exceso, así el volumen siempre es el mismo.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- Capa 4 · Por qué unos materiales son más densos ---------- -->
+    <section id="capa-4" class="banda capa capa--4">
+      <div class="ola" aria-hidden="true"></div>
+      <div class="capa4">
+        <header class="capa__cab capa__cab--centro">
+          <p class="capa__num mono" data-sube><b>Capa 04</b> Por qué unos materiales son más densos</p>
+          <h3 class="capa__titulo" data-flota>Lo que pasa por dentro</h3>
+        </header>
+        <div class="lupas">
+          <figure class="lupa">
+            <svg viewBox="0 0 260 260" aria-hidden="true">
+              <defs><clipPath id="lupa-a"><circle cx="130" cy="130" r="118"/></clipPath></defs>
+              <circle cx="130" cy="130" r="118" class="lupa__fondo lupa__fondo--madera"/>
+              <g clip-path="url(#lupa-a)" id="poros"></g>
+              <circle cx="130" cy="130" r="118" class="lupa__aro"/>
+            </svg>
+            <figcaption><b>Madera</b><span>Fibras huecas llenas de aire</span></figcaption>
+          </figure>
+          <div class="lupas__texto">
+            <p data-sube>La madera está hecha de fibras huecas llenas de aire: es porosa. Buena parte de su volumen es espacio casi vacío, y por eso tiene poca masa para el lugar que ocupa.</p>
+            <p data-sube>En los metales, los átomos están muy apretados, ordenados en redes compactas, y además cada átomo suele ser más pesado. Más masa en cada átomo y menos espacio entre ellos: más densidad.</p>
+          </div>
+          <figure class="lupa">
+            <svg viewBox="0 0 260 260" aria-hidden="true">
+              <defs><clipPath id="lupa-b"><circle cx="130" cy="130" r="118"/></clipPath></defs>
+              <circle cx="130" cy="130" r="118" class="lupa__fondo lupa__fondo--metal"/>
+              <g clip-path="url(#lupa-b)" id="atomos"></g>
+              <circle cx="130" cy="130" r="118" class="lupa__aro"/>
+            </svg>
+            <figcaption><b>Metal</b><span>Átomos pesados y empaquetados</span></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------- Capa 5 · Flotación y Arquímedes ---------- -->
+    <section id="capa-5" class="banda capa capa--5">
+      <div class="ola" aria-hidden="true"></div>
+      <div class="capa__rejilla">
+        <header class="capa__cab">
+          <p class="capa__num mono" data-sube><b>Capa 05</b> Flotación y principio de Arquímedes</p>
+          <h3 class="capa__titulo" data-flota>Flotar o hundirse</h3>
+        </header>
+        <div class="capa__texto">
+          <blockquote class="cita" data-sube>Todo cuerpo sumergido en un fluido recibe un empuje hacia arriba igual al peso del fluido que desaloja.<cite>Principio de Arquímedes</cite></blockquote>
+          <p data-sube>Si el cuerpo es menos denso que el líquido, el empuje alcanza a equilibrar su peso antes de quedar sumergido del todo, y flota, como la madera. Si es más denso, su peso siempre le gana al empuje y se va al fondo, como el metal.</p>
+        </div>
+        <figure class="tanque" aria-hidden="true">
+          <svg viewBox="0 0 520 380" id="tanque">
+            <defs><clipPath id="tanque-clip"><rect x="40" y="70" width="440" height="270"/></clipPath></defs>
+            <g clip-path="url(#tanque-clip)">
+              <path class="tanque__agua" id="tanque-agua" d=""/>
+            </g>
+            <g id="t-madera">
+              <rect x="-44" y="-26" width="88" height="52" rx="5" class="madera"/>
+              <path d="M-36 -10 C -12 -18, 12 -2, 36 -12 M-36 8 C -10 0, 14 14, 36 4" class="veta"/>
+              <g class="fuerza fuerza--peso"><path d="M0 0 V56"/><path d="M-6 48 L0 58 L6 48"/></g>
+              <g class="fuerza fuerza--empuje"><path d="M0 0 V-56"/><path d="M-6 -48 L0 -58 L6 -48"/></g>
+            </g>
+            <g id="t-metal">
+              <rect x="-26" y="-26" width="52" height="52" rx="4" class="metal"/>
+              <g class="fuerza fuerza--peso"><path d="M0 0 V74"/><path d="M-6 66 L0 76 L6 66"/></g>
+              <g class="fuerza fuerza--empuje"><path d="M0 0 V-34"/><path d="M-6 -26 L0 -36 L6 -26"/></g>
+            </g>
+            <path class="tanque__vidrio" d="M40 50 V340 H480 V50"/>
+            <g class="tanque__leyenda">
+              <g transform="translate(60 26)"><path class="fuerza--peso" d="M0 -8 V8 M-5 3 L0 9 L5 3"/><text x="12" y="5">peso</text></g>
+              <g transform="translate(140 26)"><path class="fuerza--empuje" d="M0 8 V-8 M-5 -3 L0 -9 L5 -3"/><text x="12" y="5">empuje</text></g>
+            </g>
+          </svg>
+          <figcaption class="mono" id="tanque-estado">La madera flota; el metal se hunde.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ---------- Capa 6 · Factores del ambiente ---------- -->
+    <section id="capa-6" class="banda capa capa--6">
+      <div class="ola" aria-hidden="true"></div>
+      <div class="capa__rejilla capa__rejilla--invertida">
+        <header class="capa__cab">
+          <p class="capa__num mono" data-sube><b>Capa 06</b> Factores del ambiente</p>
+          <h3 class="capa__titulo" data-flota>Un líquido que no se queda quieto</h3>
+        </header>
+        <div class="capa__texto">
+          <p data-sube>La densidad de un líquido puede cambiar mientras se mide. Si el recipiente queda abierto, parte del líquido se evapora y la masa registrada baja.</p>
+          <p data-sube>La humedad del aire juega en sentido contrario: algunos líquidos, como el alcohol, absorben agua del ambiente y su densidad cambia. La temperatura también influye, porque al calentarse el líquido se dilata. Por eso conviene medir rápido, tapar los recipientes y anotar las condiciones del laboratorio.</p>
+        </div>
+        <figure class="vaso-amb" aria-hidden="true">
+          <svg viewBox="0 0 440 360" id="ambiente">
+            <defs><clipPath id="beaker-clip"><path d="M120 90 V300 Q120 320 140 320 H280 Q300 320 300 300 V90 Z"/></clipPath></defs>
+            <g clip-path="url(#beaker-clip)">
+              <path class="amb__liq" id="amb-liq" d=""/>
+            </g>
+            <g id="vapor"></g>
+            <g id="humedad"></g>
+            <path class="amb__vidrio" d="M110 80 H124 V300 Q124 316 140 316 H280 Q296 316 296 300 V80 H310"/>
+            <g class="amb__marcas"><path d="M124 140 H140 M124 190 H134 M124 240 H140 M124 290 H134"/></g>
+            <text class="amb__etq" x="150" y="40">evaporación ↑</text>
+            <text class="amb__etq amb__etq--hum" x="330" y="96">humedad ↓</text>
+            <g class="dial" transform="translate(370 250)">
+              <circle r="44" class="dial__aro"/>
+              <path d="M-34 0 A34 34 0 0 1 34 0" class="dial__arco"/>
+              <g id="dial-aguja"><path d="M0 4 L0 -32" class="dial__aguja"/></g>
+              <circle r="4" class="dial__eje"/>
+              <text y="26" class="dial__txt">ρ medida</text>
+            </g>
+          </svg>
+          <figcaption class="mono">La lectura se mueve aunque el líquido sea el mismo.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ---------- La idea central ---------- -->
+    <section id="idea" class="banda idea">
+      <div class="ola" aria-hidden="true"></div>
+      <canvas class="burbujas" data-color="245,184,61" data-cantidad="26" aria-hidden="true"></canvas>
+      <div class="idea__grid">
+        <svg class="idea__rho" viewBox="0 0 300 360" aria-hidden="true">
+          <defs>
+            <clipPath id="rho-clip"><text x="150" y="292" text-anchor="middle" class="rho-texto">ρ</text></clipPath>
+          </defs>
+          <text x="150" y="292" text-anchor="middle" class="rho-texto rho-texto--contorno">ρ</text>
+          <g clip-path="url(#rho-clip)">
+            <path class="rho-liq" id="rho-liq" d=""/>
+          </g>
+        </svg>
+        <div class="idea__texto">
+          <p class="etiqueta-p2" data-sube>La idea central de la práctica</p>
+          <h3 class="idea__frase" data-flota>La densidad es la huella de un material.</h3>
+          <p class="idea__p" data-sube>No importa si la muestra es grande o pequeña: la relación entre su masa y su volumen se mantiene. Medirla bien exige elegir el método adecuado para obtener el volumen y cuidar el ambiente en el que se mide.</p>
+          <ol class="claves">
+            <li data-sube><b>01</b>No depende del tamaño de la muestra.</li>
+            <li data-sube><b>02</b>El volumen se obtiene por varios caminos.</li>
+            <li data-sube><b>03</b>Decide qué flota y qué se hunde.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="banda pie2">
+    <div class="ola" aria-hidden="true"></div>
+    <div class="pie2__cierre">
+      <p class="etiqueta-p2" data-sube>Para llevar</p>
+      <p class="pie2__frase" data-flota>Pesar no basta para saber de qué está hecho algo. La densidad sí lo dice.</p>
+    </div>
+
+    <nav class="pie2__practicas" aria-label="Prácticas de laboratorio">
+      <a class="pie2__p" href="../practica-1/">
+        <b>01</b><span>Error e incertidumbre en mediciones directas e indirectas</span><i class="mono">Ver práctica →</i>
+      </a>
+      <a class="pie2__p pie2__p--actual" href="#portada" aria-current="page">
+        <b>02</b><span>Densidad y proporcionalidad en sólidos y líquidos</span><i class="mono">Estás aquí</i>
+      </a>
+      <span class="pie2__p pie2__p--pronto">
+        <b>03</b><span>Práctica 3</span><i class="mono">Próximamente</i>
+      </span>
+    </nav>
+
+    <div class="pie2__base mono">
+      <span>Leonardo Sánchez</span>
+      <span>Universidad Nacional Abierta y a Distancia · Física General</span>
+      <a href="../">Todas las prácticas</a>
+      <a href="#portada">Volver arriba ↑</a>
+    </div>
+  </footer>
+</body>
+</html>
