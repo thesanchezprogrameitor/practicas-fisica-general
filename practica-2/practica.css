@@ -304,9 +304,10 @@ body { background: var(--tinta); }
 .capa__rejilla--invertida { grid-template-areas: "vis cab" "vis txt"; }
 .capa__cab { grid-area: cab; align-self: end; display: grid; gap: 1rem; }
 .capa__texto { grid-area: txt; align-self: start; display: grid; gap: 1.1rem; max-width: 52ch; }
-.capa__texto p { color: var(--fg2); }
+.capa__texto p { color: var(--fg2); font-size: clamp(1.15rem, 1.3vw, 1.32rem); }
 .capa__rejilla > figure { grid-area: vis; margin: 0; }
 .capa__num { display: flex; align-items: center; gap: 0.8rem; color: var(--fg2); }
+.capa__num.mono { font-size: 0.84rem; }
 .capa__num b {
   padding: 0.35em 0.8em;
   border-radius: 100px;
@@ -318,11 +319,13 @@ body { background: var(--tinta); }
   font-family: var(--tit);
   font-weight: 700;
   font-variation-settings: "wdth" 85, "opsz" 72;
-  font-size: clamp(2.4rem, 4.8vw, 4.8rem);
+  font-size: clamp(2.5rem, 5vw, 5rem);
   line-height: 0.95;
   letter-spacing: -0.035em;
 }
-figure figcaption.mono { max-width: 44ch; margin: 0.8rem auto 0; color: var(--fg2); text-align: center; line-height: 1.6; }
+/* El título de la capa 3 conserva su tamaño */
+.capa3__cab .capa__titulo { font-size: clamp(2.4rem, 4.8vw, 4.8rem); }
+figure figcaption.mono { font-size: 0.8rem; max-width: 44ch; margin: 0.8rem auto 0; color: var(--fg2); text-align: center; line-height: 1.6; }
 
 @media (max-width: 900px) {
   .capa__rejilla,
@@ -400,7 +403,7 @@ figure figcaption.mono { max-width: 44ch; margin: 0.8rem auto 0; color: var(--fg
   overflow: hidden;
 }
 .capa3__cab { display: grid; gap: 0.9rem; max-width: 980px; }
-.capa3__intro { max-width: 60ch; color: var(--fg2); }
+.capa3__intro { max-width: 60ch; color: var(--fg2); font-size: clamp(1.15rem, 1.3vw, 1.32rem); }
 .carril { display: flex; gap: clamp(2rem, 5vw, 5rem); width: max-content; }
 .metodo {
   width: min(76vw, 980px);
@@ -540,8 +543,8 @@ figure figcaption.mono { max-width: 44ch; margin: 0.8rem auto 0; color: var(--fg
 .lupa { margin: 0; display: grid; gap: 1rem; justify-items: center; text-align: center; }
 .lupa svg { width: min(100%, 300px); height: auto; }
 .lupa figcaption { display: grid; gap: 0.2rem; }
-.lupa figcaption b { font: 700 1.6rem var(--tit); letter-spacing: -0.02em; }
-.lupa figcaption span { font: 0.72rem var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg2); }
+.lupa figcaption b { font: 700 1.9rem var(--tit); letter-spacing: -0.02em; }
+.lupa figcaption span { font: 0.88rem var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg2); }
 .lupa__fondo--madera { fill: #d9ae74; }
 .lupa__fondo--metal { fill: #40566a; }
 .lupa__aro { fill: none; stroke: var(--fg); stroke-width: 6; }
@@ -549,7 +552,7 @@ figure figcaption.mono { max-width: 44ch; margin: 0.8rem auto 0; color: var(--fg
 .aire { fill: none; stroke: rgba(138, 90, 43, 0.6); stroke-width: 1.4; }
 .atomo { fill: var(--metal); stroke: #2f4252; stroke-width: 1.6; }
 .atomo__brillo { fill: rgba(255, 255, 255, 0.55); }
-.lupas__texto { display: grid; gap: 1.1rem; color: var(--fg2); }
+.lupas__texto { display: grid; gap: 1.1rem; color: var(--fg2); font-size: clamp(1.15rem, 1.3vw, 1.32rem); }
 @media (max-width: 900px) {
   .lupas { grid-template-columns: 1fr 1fr; }
   .lupas__texto { grid-column: 1 / -1; order: 3; }
@@ -569,11 +572,11 @@ figure figcaption.mono { max-width: 44ch; margin: 0.8rem auto 0; color: var(--fg
   border-left: 4px solid var(--ac);
   font-family: var(--tit);
   font-weight: 500;
-  font-size: clamp(1.3rem, 2.2vw, 1.8rem);
+  font-size: clamp(1.4rem, 2.35vw, 1.95rem);
   line-height: 1.2;
   letter-spacing: -0.015em;
 }
-.cita cite { display: block; margin-top: 0.7rem; font: normal 0.72rem var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ac); }
+.cita cite { display: block; margin-top: 0.7rem; font: normal 0.8rem var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ac); }
 
 /* ---------- Capa 6 · Ambiente ---------- */
 .vaso-amb svg { width: 100%; height: auto; overflow: visible; }
@@ -625,7 +628,7 @@ figure figcaption.mono { max-width: 44ch; margin: 0.8rem auto 0; color: var(--fg
   line-height: 0.9;
   letter-spacing: -0.045em;
 }
-.idea__p { max-width: 52ch; color: var(--fg2); font-size: clamp(1rem, 1.3vw, 1.2rem); }
+.idea__p { max-width: 52ch; color: var(--fg2); font-size: clamp(1.15rem, 1.3vw, 1.32rem); }
 .claves { list-style: none; margin: 0; padding: 0; display: grid; border-top: 1px solid var(--borde); }
 .claves li {
   display: flex;

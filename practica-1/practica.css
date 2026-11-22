@@ -370,7 +370,7 @@
   .cap { min-height: 100vh; min-height: 100svh; }
 }
 .cap__texto { position: relative; display: grid; gap: 1.3rem; }
-.cap__texto p:not(.etiqueta) { color: var(--papel-2); max-width: 60ch; }
+.cap__texto p:not(.etiqueta) { color: var(--papel-2); max-width: 60ch; font-size: clamp(1.15rem, 1.3vw, 1.32rem); }
 .cap__num {
   position: absolute;
   top: -0.32em;
@@ -387,7 +387,7 @@
 .cap__titulo {
   font-family: var(--serif);
   font-weight: 400;
-  font-size: clamp(1.9rem, 3.7vw, 3.8rem);
+  font-size: clamp(1.96rem, 3.8vw, 3.9rem);
   line-height: 1;
   letter-spacing: -0.015em;
   margin-bottom: 0.4rem;
@@ -564,7 +564,7 @@
 .campana__centro { stroke: var(--papel-3); stroke-dasharray: 3 5; }
 .campana__txt { fill: var(--papel-3); font: 10px var(--mono); letter-spacing: 0.1em; text-transform: uppercase; text-anchor: middle; }
 .campana__txt--acento { fill: var(--acento); }
-.idea__texto { max-width: 62ch; font-size: clamp(1.05rem, 1.4vw, 1.25rem); color: var(--papel-2); }
+.idea__texto { max-width: 62ch; font-size: clamp(1.2rem, 1.6vw, 1.42rem); color: var(--papel-2); }
 .idea__texto em { color: var(--papel); font-family: var(--serif); font-size: 1.2em; }
 
 .factores {
