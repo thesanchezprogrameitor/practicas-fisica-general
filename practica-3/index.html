@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Práctica 3 · Cálculo de la gravedad terrestre | Física General UNAD</title>
+  <meta name="description" content="Práctica 3 de Física General, UNAD: cálculo de la gravedad terrestre con un péndulo simple. Un proyecto traído por el estudiante Leonardo Sánchez.">
+  <meta name="author" content="Leonardo Sánchez">
+  <meta name="theme-color" content="#efeadf">
+  <meta name="color-scheme" content="light">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_CO">
+  <meta property="og:title" content="Práctica 3 · Cálculo de la gravedad terrestre">
+  <meta property="og:description" content="Física General · UNAD · Un proyecto traído por el estudiante Leonardo Sánchez.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%23efeadf'/><path d='M32 8 L44 40' stroke='%2315130f' stroke-width='3'/><circle cx='44' cy='42' r='10' fill='%232a3cf0'/><circle cx='32' cy='8' r='3' fill='%2315130f'/></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../assets/css/comun.css?v=4">
+  <link rel="stylesheet" href="practica.css?v=5">
+
+  <script>
+    (function () {
+      var h = document.documentElement;
+      h.classList.add("js");
+      try { if (sessionStorage.getItem("telon") === "1") h.classList.add("telon-entrada"); } catch (e) {}
+      setTimeout(function () {
+        if (!h.classList.contains("listo")) { h.classList.remove("js"); h.classList.remove("telon-entrada"); var t = document.querySelector(".telon"); if (t) t.style.display = "none"; }
+      }, 4000);
+    })();
+  </script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script defer src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script defer src="../assets/js/comun.js?v=4"></script>
+  <script defer src="practica.js?v=4"></script>
+</head>
+<body>
+  <a class="sr-only" href="#lo-que-hicimos">Saltar a «Lo que hicimos»</a>
+
+  <div class="grano" aria-hidden="true"></div>
+  <div class="telon" aria-hidden="true"></div>
+  <div class="cursor" aria-hidden="true"><span class="cursor__coord"></span></div>
+
+  <div class="carga" aria-hidden="true">
+    <div class="carga__fila">
+      <span class="carga__texto">Soltando el péndulo…</span>
+      <span class="carga__num"><b>000</b><small>%</small></span>
+    </div>
+    <div class="carga__barra"><span></span></div>
+  </div>
+
+  <div class="progreso" aria-hidden="true"><span></span></div>
+
+  <header class="barra">
+    <a class="barra__marca" href="../"><i class="barra__punto"></i><b>Prácticas</b><span>de laboratorio</span></a>
+    <nav class="barra__nav" aria-label="Secciones">
+      <a href="#portada" class="ocultar-movil">Inicio</a>
+      <a href="#practica" class="ocultar-movil">Práctica 3</a>
+      <a href="#lo-que-hicimos">Lo que hicimos</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- =====================================================
+         1. PORTADA
+         ===================================================== -->
+    <section id="portada" class="portada">
+      <div class="portada__soporte" aria-hidden="true"></div>
+      <div class="pendulo" aria-hidden="true">
+        <i class="pendulo__eco"></i><i class="pendulo__eco"></i><i class="pendulo__eco"></i>
+        <div class="pendulo__brazo"><span class="pendulo__hilo"></span><span class="pendulo__masa"></span></div>
+      </div>
+
+      <div class="portada__centro">
+        <p class="portada__ceja" data-sube>Este proyecto es traído a ustedes por el estudiante</p>
+        <p class="portada__nombre" data-cuelga>Leonardo Sánchez</p>
+        <p class="portada__curso" data-sube>Física General <span>(100413)</span></p>
+      </div>
+
+      <div class="portada__pie">
+        <p class="portada__uni mono" data-sube>Universidad Nacional Abierta y a Distancia (UNAD)</p>
+        <a class="portada__bajar" href="#practica" data-sube>
+          <span class="mono">Desliza</span>
+          <span class="portada__vaiven" aria-hidden="true"><i></i></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Título de la práctica (sigue siendo parte de la portada) -->
+    <section id="practica" class="practica">
+      <canvas class="arena" id="arena" aria-hidden="true"></canvas>
+      <div class="practica__texto">
+        <p class="etiqueta-p3" data-sube>Práctica 3</p>
+        <h1 class="practica__titulo" data-cuelga>Cálculo de la gravedad terrestre</h1>
+        <p class="practica__lead" data-sube>¿Se puede medir la gravedad de la Tierra con un hilo y una masa? Armamos un péndulo, cronometramos sus oscilaciones y, con los tiempos y las longitudes, calculamos su valor.</p>
+        <dl class="ficha">
+          <div data-sube><dt>Reto</dt><dd>2</dd></div>
+          <div data-sube><dt>Componente</dt><dd>Práctico · Sesión 1</dd></div>
+          <div data-sube><dt>Año</dt><dd>2026</dd></div>
+        </dl>
+      </div>
+      <p class="arena__pie mono" aria-hidden="true">Un péndulo con arena dibuja su propio vaivén</p>
+    </section>
+
+    <!-- =====================================================
+         2. LO QUE HICIMOS
+         ===================================================== -->
+    <section id="lo-que-hicimos" class="hicimos">
+      <canvas class="ola-pendulos" id="ola-pendulos" aria-hidden="true"></canvas>
+      <div class="hicimos__cab">
+        <p class="etiqueta-p3" data-sube>Sección 02</p>
+        <h2 class="hicimos__titulo" data-cuelga>Lo que hicimos</h2>
+        <p class="hicimos__manifiesto" data-sube>Un soporte, un hilo, una masa, una cinta métrica, un transportador y un cronómetro. Con eso armamos un péndulo simple, medimos cuánto tardaba en ir y volver, y cambiamos una sola cosa a la vez: el largo, la masa y el ángulo.</p>
+        <p class="hicimos__pista mono" data-sube>Quince péndulos de distinto largo, soltados a la vez ↓</p>
+      </div>
+    </section>
+
+    <div class="pasos" id="pasos">
+      <div class="escenario" aria-hidden="true">
+        <div class="escenario__cab mono">
+          <span class="escenario__num"><b id="esc-num">01</b> / 06</span>
+          <span class="escenario__nombre" id="esc-nombre">Armar el péndulo</span>
+        </div>
+        <canvas class="escenario__lienzo" id="escenario"></canvas>
+        <div class="escenario__barra"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      </div>
+
+      <div class="pasos__textos">
+        <article class="paso" id="paso-1" data-escena="0" data-nombre="Armar el péndulo">
+          <p class="paso__num mono" data-sube><b>Paso 01</b> Armar el péndulo</p>
+          <h3 class="paso__titulo" data-cuelga>Una masa, un hilo y un soporte</h3>
+          <p data-sube>Colgamos una masa de un hilo sujeto a un soporte universal. Con una cinta métrica medimos el largo del hilo, desde el punto de donde cuelga hasta el centro de la masa, y con un transportador controlamos desde qué ángulo se soltaba.</p>
+        </article>
+
+        <article class="paso" id="paso-2" data-escena="1" data-nombre="Medir el periodo">
+          <p class="paso__num mono" data-sube><b>Paso 02</b> Medir el periodo</p>
+          <h3 class="paso__titulo" data-cuelga>Diez oscilaciones, no una</h3>
+          <p data-sube>El periodo es lo que tarda el péndulo en ir y volver a su punto de partida. Lo soltamos desde un ángulo pequeño y cronometramos diez oscilaciones completas en lugar de una sola.</p>
+          <p data-sube>Así, el error de apretar el cronómetro se reparte entre las diez y el tiempo de cada oscilación sale más confiable. Repetimos cada medición cinco veces.</p>
+        </article>
+
+        <article class="paso" id="paso-3" data-escena="2" data-nombre="Cambiar el largo">
+          <p class="paso__num mono" data-sube><b>Paso 03</b> Cambiar el largo del hilo</p>
+          <h3 class="paso__titulo" data-cuelga>Entre más largo, más lento</h3>
+          <p data-sube>Probamos con tres longitudes distintas. Entre más largo era el hilo, más tardaba el péndulo en ir y volver.</p>
+          <p data-sube>Pero no crecen al mismo paso: para que una oscilación dure el doble, el hilo tiene que ser cuatro veces más largo.</p>
+        </article>
+
+        <article class="paso" id="paso-4" data-escena="3" data-nombre="De las oscilaciones a la gravedad">
+          <p class="paso__num mono" data-sube><b>Paso 04</b> De las oscilaciones a la gravedad</p>
+          <h3 class="paso__titulo" data-cuelga>La gravedad en una recta</h3>
+          <p data-sube>Con los tiempos y las longitudes armamos una gráfica. Al elevar al cuadrado cada periodo, los puntos quedaron alineados en una línea recta.</p>
+          <p data-sube>La inclinación de esa recta depende solo de la gravedad, así que de ella sacamos su valor, que quedó muy cerca del valor real.</p>
+        </article>
+
+        <article class="paso" id="paso-5" data-escena="4" data-nombre="Cambiar la masa">
+          <p class="paso__num mono" data-sube><b>Paso 05</b> Cambiar la masa</p>
+          <h3 class="paso__titulo" data-cuelga>El peso no marca el ritmo</h3>
+          <p data-sube>Con el mismo hilo colgamos una masa mucho más pesada, y el péndulo oscilaba prácticamente igual.</p>
+          <p data-sube>La gravedad tira más fuerte de la masa pesada, pero también cuesta más ponerla en movimiento, y los dos efectos se compensan. El peso no decide qué tan rápido oscila.</p>
+        </article>
+
+        <article class="paso" id="paso-6" data-escena="5" data-nombre="Cambiar el ángulo">
+          <p class="paso__num mono" data-sube><b>Paso 06</b> Cambiar el ángulo</p>
+          <h3 class="paso__titulo" data-cuelga>Mejor un ángulo pequeño</h3>
+          <p data-sube>Soltamos el péndulo desde un ángulo más abierto y tardó un poco más en cada oscilación.</p>
+          <p data-sube>Su ritmo solo se mantiene casi constante cuando el ángulo es pequeño. Por eso la gravedad se mide soltándolo desde pocos grados.</p>
+        </article>
+      </div>
+    </div>
+
+    <!-- ---------- La idea central ---------- -->
+    <section id="idea" class="idea">
+      <canvas class="tierra" id="tierra" aria-hidden="true"></canvas>
+      <div class="idea__texto">
+        <p class="etiqueta-p3" data-sube>La idea central de la práctica</p>
+        <h3 class="idea__frase" data-cuelga>Un péndulo basta para medir la gravedad</h3>
+        <p class="idea__p" data-sube>El ritmo de un péndulo depende solo del largo del hilo y de la gravedad: no de la masa y, con ángulos pequeños, tampoco de desde dónde se suelte. Por eso, midiendo el largo y el tiempo, la gravedad queda al descubierto.</p>
+        <ol class="claves">
+          <li data-sube><b>01</b>El largo del hilo marca el ritmo.</li>
+          <li data-sube><b>02</b>La masa no lo cambia.</li>
+          <li data-sube><b>03</b>Con ángulos pequeños, la medida es confiable.</li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie3">
+    <div class="pie3__cierre">
+      <p class="etiqueta-p3" data-sube>Para llevar</p>
+      <p class="pie3__frase" data-cuelga>Cada vaivén de un péndulo es una medida de la gravedad.</p>
+    </div>
+
+    <nav class="pie3__practicas" aria-label="Prácticas de laboratorio">
+      <a class="pie3__p" href="../practica-1/">
+        <b>01</b><span>Error e incertidumbre en mediciones directas e indirectas</span><i class="mono">Ver práctica →</i>
+      </a>
+      <a class="pie3__p" href="../practica-2/">
+        <b>02</b><span>Densidad y proporcionalidad en sólidos y líquidos</span><i class="mono">Ver práctica →</i>
+      </a>
+      <a class="pie3__p pie3__p--actual" href="#portada" aria-current="page">
+        <b>03</b><span>Cálculo de la gravedad terrestre</span><i class="mono">Estás aquí</i>
+      </a>
+    </nav>
+
+    <div class="pie3__base mono">
+      <span>Leonardo Sánchez</span>
+      <span>Universidad Nacional Abierta y a Distancia · Física General</span>
+      <a href="../">Todas las prácticas</a>
+      <a href="#portada">Volver arriba ↑</a>
+    </div>
+  </footer>
+</body>
+</html>

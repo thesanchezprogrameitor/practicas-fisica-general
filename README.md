@@ -9,7 +9,7 @@ Páginas de presentación de las prácticas de laboratorio del curso **Física G
 | Índice de prácticas | https://thesanchezprogrameitor.github.io/practicas-fisica-general/ |
 | Práctica 1 · Error e incertidumbre en mediciones directas e indirectas | https://thesanchezprogrameitor.github.io/practicas-fisica-general/practica-1/ |
 | Práctica 2 · Densidad y proporcionalidad en sólidos y líquidos | https://thesanchezprogrameitor.github.io/practicas-fisica-general/practica-2/ |
-| Práctica 3 | Próximamente |
+| Práctica 3 · Cálculo de la gravedad terrestre | https://thesanchezprogrameitor.github.io/practicas-fisica-general/practica-3/ |
 
 ## Estructura
 
@@ -27,19 +27,17 @@ practica-2/
   index.html          Página de la Práctica 2
   practica.css        Identidad propia: columna de densidad (paleta, títulos, olas)
   practica.js         Animaciones propias de la Práctica 2
+practica-3/
+  index.html          Página de la Práctica 3
+  practica.css        Identidad propia: papel crema, tinta y azul cobalto; letras que cuelgan
+  practica.js         Péndulos animados: portada, arena, ola de péndulos, escenario por pasos y la Tierra
 ```
 
-Cada práctica tiene su propia identidad visual (paleta, tipografía de títulos, fondos y animaciones), pero todas comparten la barra de navegación, la estructura (portada, título, «Lo que hicimos», idea central y pie) y los créditos. La Práctica 2 redefine en su `practica.css` las variables de color de `comun.css` solo para su página.
+Cada práctica tiene su propia identidad visual (paleta, tipografía de títulos, fondos y animaciones), pero todas comparten la barra de navegación, la estructura (portada, título, «Lo que hicimos», idea central y pie) y los créditos. Las prácticas 2 y 3 redefinen en su `practica.css` las variables de color de `comun.css` solo para su página.
 
 Cada práctica vive en su propia carpeta y tiene su propio enlace (`/practica-N/`). Lo que comparten todas está en `assets/`.
 
-## Cómo agregar la Práctica 3
-
-1. Copiar la carpeta de una práctica como `practica-3`.
-2. En `practica-3/index.html`, cambiar el título, la descripción, los datos de la portada y el contenido de «Lo que hicimos».
-3. Ajustar `practica.css` y `practica.js` a las nuevas actividades (los bloques de la Práctica 1 que no se usen se pueden borrar).
-4. En `index.html` (raíz), convertir el elemento «Práctica 3 · Próximamente» en un enlace a `practica-3/`.
-5. En el pie de cada práctica, actualizar la lista de prácticas para enlazar la nueva.
+## Publicación
 
 GitHub Pages publica los cambios automáticamente al subirlos a la rama `main`. Al cambiar un `.css` o `.js`, sube el número `?v=` con que se enlaza en el HTML para que los navegadores no usen la versión vieja guardada.
 

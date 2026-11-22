@@ -1,0 +1,498 @@
+/* =========================================================
+   Práctica 3 · Cálculo de la gravedad terrestre
+   Identidad propia: papel crema, tinta negra y azul cobalto.
+   Todo oscila: un péndulo gigante en la portada, letras que
+   cuelgan y se mecen con el scroll, y un escenario fijo que
+   cambia de experimento en cada paso.
+   Comparte con el sitio: barra, cursor, carga, telón y créditos.
+   ========================================================= */
+
+:root {
+  /* Sustituye la paleta común solo en esta página (fondo claro, texto oscuro) */
+  --tinta: #efeadf;
+  --tinta-2: #e6e0d2;
+  --tinta-3: #dcd5c4;
+  --papel: #15130f;
+  --papel-2: rgba(21, 19, 15, 0.76);
+  --papel-3: rgba(21, 19, 15, 0.54);
+  --linea: rgba(21, 19, 15, 0.12);
+  --linea-fuerte: rgba(21, 19, 15, 0.26);
+  --acento: #2a3cf0;
+  --acento-suave: rgba(42, 60, 240, 0.12);
+
+  --crema: #efeadf;
+  --negro: #15130f;
+  --cobalto: #2a3cf0;
+  --laton: #d9a031;
+
+  --tit: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --sans: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Ancho útil: el contenido nunca pasa de 1640 px y queda centrado */
+  --lado: max(var(--gutter), calc((100vw - 1640px) / 2));
+}
+
+body { background: var(--crema); font-variation-settings: "wdth" 100; }
+::selection { background: var(--cobalto); color: var(--crema); }
+
+/* El cursor de coordenadas se invierte para leerse sobre crema, negro y cobalto */
+.cursor { mix-blend-mode: difference; }
+.cursor__coord { color: #e8e4dc; }
+.cursor.sobre .cursor__coord { color: #fff; }
+
+/* Pantalla de carga con la tipografía de esta práctica */
+.js .carga { background: var(--cobalto); color: var(--crema); }
+.carga__texto { color: rgba(239, 234, 223, 0.7); }
+.carga__num { font-family: var(--tit); font-weight: 800; font-variation-settings: "wdth" 125; letter-spacing: -0.03em; }
+.carga__num small { color: var(--crema); }
+.carga__barra { background: rgba(239, 234, 223, 0.25); }
+.carga__barra span { background: var(--crema); }
+
+/* ---------- Revelados ---------- */
+.js [data-sube] { opacity: 0; transform: translateY(28px); }
+.js [data-cuelga] { opacity: 0; }
+.palabra { display: inline-block; white-space: nowrap; }
+/* Cada letra cuelga de un punto por encima de ella: así se mece como un péndulo */
+.ch {
+  display: inline-block;
+  transform-origin: 50% -0.35em;
+  transform: rotate(calc(var(--vaiven, 0) * var(--k, 1) * 1deg));
+}
+.ch__in { display: inline-block; transform-origin: 50% -0.35em; }
+
+/* Etiquetas con un pequeño péndulo que nunca se detiene */
+.etiqueta-p3 {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75em;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ac, var(--cobalto));
+}
+.etiqueta-p3::before {
+  content: "";
+  width: 9px;
+  height: 18px;
+  background:
+    radial-gradient(circle at 50% calc(100% - 4.5px), currentColor 4px, transparent 4.5px),
+    linear-gradient(currentColor, currentColor) 50% 0 / 1px calc(100% - 6px) no-repeat;
+  transform-origin: 50% 0;
+  animation: mini-vaiven 1.6s ease-in-out infinite alternate;
+}
+@keyframes mini-vaiven { from { transform: rotate(-24deg); } to { transform: rotate(24deg); } }
+
+/* =========================================================
+   Portada
+   ========================================================= */
+.portada {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  padding: calc(var(--gutter) + 56px) var(--lado) var(--gutter);
+  background: var(--crema);
+  overflow: hidden;
+  isolation: isolate; /* el péndulo invierte solo los colores de la portada */
+}
+.portada__soporte {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 132px;
+  height: 10px;
+  margin-left: -66px;
+  background: var(--negro);
+  border-radius: 0 0 4px 4px;
+}
+.portada__soporte::after {
+  content: "";
+  position: absolute;
+  left: 50%; top: 4px;
+  width: 12px; height: 12px;
+  margin-left: -6px;
+  border-radius: 50%;
+  background: var(--negro);
+  box-shadow: 0 0 0 3px var(--crema);
+}
+
+/* El péndulo gigante: blanco con "diferencia" para invertir lo que tiene detrás */
+.pendulo {
+  --L: 60vh;
+  --D: min(30vw, 36vh);
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  width: 0;
+  height: 0;
+  z-index: 3;
+  mix-blend-mode: difference;
+  pointer-events: none;
+}
+.pendulo__brazo { position: absolute; left: 0; top: 0; transform-origin: 0 0; transform: rotate(18deg); }
+.pendulo__hilo {
+  position: absolute;
+  left: -1px; top: 0;
+  width: 2px;
+  height: var(--L);
+  background: #fff;
+}
+.pendulo__masa {
+  position: absolute;
+  left: calc(var(--D) / -2);
+  top: calc(var(--L) - var(--D) / 2);
+  width: var(--D);
+  height: var(--D);
+  border-radius: 50%;
+  background: #fff;
+}
+.pendulo__eco {
+  position: absolute;
+  left: calc(var(--D) / -2);
+  top: calc(var(--D) / -2);
+  width: var(--D);
+  height: var(--D);
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0;
+}
+
+.portada__centro {
+  position: relative;
+  z-index: 1;
+  align-self: center;
+  display: grid;
+  justify-items: center;
+  gap: clamp(0.8rem, 2.4vh, 1.6rem);
+  text-align: center;
+}
+.portada__ceja { font-size: clamp(0.95rem, 1.3vw, 1.2rem); color: var(--papel-2); }
+.portada__nombre {
+  font-family: var(--tit);
+  font-weight: 800;
+  font-variation-settings: "wdth" 118;
+  /* el nombre mide unas 12,9 veces su tamaño de letra: así cabe en un renglón */
+  font-size: clamp(1.4rem, min(6.9vw, 20vh), 7.8rem);
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.portada__curso {
+  font-family: var(--mono);
+  font-size: clamp(0.74rem, 0.95vw, 0.9rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.portada__curso span { color: var(--cobalto); }
+
+.portada__pie {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  flex-wrap: wrap;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--linea-fuerte);
+}
+.portada__uni { color: var(--papel-2); }
+.portada__bajar { display: inline-flex; align-items: center; gap: 0.9rem; text-decoration: none; }
+.portada__vaiven {
+  position: relative;
+  width: 22px;
+  height: 34px;
+}
+.portada__vaiven i {
+  position: absolute;
+  left: 50%; top: 0;
+  width: 1px; height: 26px;
+  background: currentColor;
+  transform-origin: 50% 0;
+  animation: mini-vaiven 1.1s ease-in-out infinite alternate;
+}
+.portada__vaiven i::after {
+  content: "";
+  position: absolute;
+  left: -4px; bottom: -8px;
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--cobalto);
+}
+
+/* =========================================================
+   Título de la práctica
+   ========================================================= */
+.practica {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  align-content: center;
+  padding: clamp(5rem, 12vh, 8rem) var(--lado) clamp(3rem, 8vh, 6rem);
+  overflow: hidden;
+  isolation: isolate;
+}
+.arena {
+  position: absolute;
+  z-index: -1;
+  right: 0;
+  top: 0;
+  width: min(62vw, 980px);
+  height: 100%;
+  pointer-events: none;
+}
+@media (max-width: 899px) {
+  .arena { width: 100%; opacity: 0.4; }
+}
+.arena__pie {
+  position: absolute;
+  right: var(--lado);
+  bottom: clamp(1.4rem, 4vh, 2.6rem);
+  color: var(--papel-3);
+}
+.practica__texto { display: grid; gap: clamp(1rem, 2.6vh, 1.8rem); }
+.practica__titulo {
+  font-family: var(--tit);
+  font-weight: 800;
+  font-variation-settings: "wdth" 112;
+  /* «gravedad terrestre» mide unas 13,4 veces el tamaño de letra: el título queda en dos renglones */
+  font-size: clamp(1.6rem, min(6.6vw, 13vh), 7.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  max-width: 13.9em;
+  text-wrap: balance;
+}
+@media (max-width: 640px) {
+  .practica__titulo { font-size: 10vw; }
+}
+.practica__lead { max-width: 33em; font-size: clamp(1.05rem, 1.35vw, 1.3rem); line-height: 1.55; color: var(--papel-2); }
+
+.ficha {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem clamp(1.6rem, 4vw, 3.6rem);
+  margin: 0.4rem 0 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--linea-fuerte);
+  max-width: 44rem;
+}
+.ficha div { display: grid; gap: 0.15rem; }
+.ficha dt { font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--papel-3); }
+.ficha dd { margin: 0; font-weight: 700; font-variation-settings: "wdth" 110; font-size: clamp(1.05rem, 1.4vw, 1.35rem); }
+
+/* =========================================================
+   Lo que hicimos (cabecera oscura con la ola de péndulos)
+   ========================================================= */
+.hicimos {
+  --ac: #8f9cff;
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  background: var(--negro);
+  color: var(--crema);
+  overflow: hidden;
+  isolation: isolate;
+}
+.ola-pendulos { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+.hicimos__cab {
+  display: grid;
+  gap: clamp(1rem, 2.4vh, 1.6rem);
+  align-content: start;
+  padding: clamp(5rem, 12vh, 8rem) var(--lado) 0;
+  max-width: calc(980px + 2 * var(--lado));
+}
+.hicimos__titulo {
+  font-family: var(--tit);
+  font-weight: 800;
+  font-variation-settings: "wdth" 125;
+  font-size: clamp(2rem, min(8.4vw, 17vh), 9.6rem);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.hicimos__manifiesto { max-width: 36em; font-size: clamp(1.05rem, 1.4vw, 1.35rem); line-height: 1.55; color: rgba(239, 234, 223, 0.82); }
+.hicimos__pista { color: rgba(239, 234, 223, 0.5); }
+
+/* =========================================================
+   Pasos: texto a la izquierda, escenario fijo a la derecha
+   ========================================================= */
+.pasos {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: clamp(2rem, 4vw, 5rem);
+  padding: 0 var(--lado);
+}
+.pasos__textos { grid-column: 1; grid-row: 1; }
+.escenario {
+  grid-column: 2;
+  grid-row: 1;
+  position: sticky;
+  top: 0;
+  align-self: start; /* sin esto la celda se estira y el escenario no se queda fijo */
+  height: 100vh;
+  height: 100svh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 0.8rem;
+  padding: 76px 0 clamp(1.2rem, 4vh, 2.4rem);
+}
+.escenario__cab { display: flex; justify-content: space-between; gap: 1rem; color: var(--papel-3); }
+.escenario__num b { color: var(--cobalto); font-weight: 500; }
+.escenario__nombre { color: var(--papel); transition: opacity 0.35s; }
+.escenario__lienzo { width: 100%; height: 100%; min-height: 0; }
+.escenario__barra { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
+.escenario__barra i { height: 3px; background: var(--linea-fuerte); transition: background 0.5s; }
+.escenario__barra i.hecho { background: var(--papel); }
+.escenario__barra i.activo { background: var(--cobalto); }
+
+.paso {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(0.9rem, 2vh, 1.3rem);
+  padding: clamp(2.5rem, 8vh, 6rem) 0;
+}
+.paso__num { color: var(--papel-3); }
+.paso__num b { color: var(--cobalto); font-weight: 500; margin-right: 0.8em; }
+.paso__titulo {
+  font-family: var(--tit);
+  font-weight: 800;
+  font-variation-settings: "wdth" 112;
+  font-size: clamp(1.7rem, 3.1vw, 3.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.paso p:not(.paso__num) { max-width: 33em; color: var(--papel-2); font-size: clamp(1rem, 1.12vw, 1.12rem); }
+
+/* Celular y tableta: el escenario queda arriba y el texto pasa por debajo */
+@media (max-width: 899px) {
+  .pasos { display: block; padding: 0; }
+  .escenario {
+    z-index: 2;
+    height: 52vh;
+    height: 52svh;
+    padding: 64px var(--gutter) 0.8rem;
+    background: var(--crema);
+    box-shadow: 0 18px 24px -6px var(--crema);
+  }
+  .pasos__textos { position: relative; z-index: 1; padding: 0 var(--gutter); }
+  .paso { min-height: 78vh; min-height: 78svh; justify-content: flex-start; padding: 2.2rem 0 3rem; }
+}
+
+/* =========================================================
+   La idea central
+   ========================================================= */
+.idea {
+  --ac: var(--crema);
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  align-items: center;
+  padding: clamp(5rem, 12vh, 8rem) var(--lado);
+  background: var(--cobalto);
+  color: var(--crema);
+  overflow: hidden;
+  isolation: isolate;
+}
+.tierra { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+.idea__texto { display: grid; gap: clamp(1rem, 2.4vh, 1.6rem); max-width: min(60rem, 100%); }
+.idea__frase {
+  font-family: var(--tit);
+  font-weight: 800;
+  font-variation-settings: "wdth" 112;
+  font-size: clamp(2rem, min(3.7vw, 8vh), 3.8rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.idea__p { max-width: 34em; font-size: clamp(1rem, 1.2vw, 1.18rem); color: rgba(239, 234, 223, 0.86); }
+.claves { list-style: none; margin: 0.4rem 0 0; padding: 0; border-top: 1px solid rgba(239, 234, 223, 0.3); }
+.claves li {
+  display: flex;
+  gap: 1.2rem;
+  align-items: baseline;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid rgba(239, 234, 223, 0.3);
+  font-weight: 600;
+}
+.claves b { font: 400 0.72rem var(--mono); letter-spacing: 0.1em; opacity: 0.7; }
+
+/* =========================================================
+   Pie
+   ========================================================= */
+.pie3 {
+  --ac: #8f9cff;
+  position: relative;
+  padding: clamp(5rem, 14vh, 9rem) var(--lado) var(--gutter);
+  background: var(--negro);
+  color: var(--crema);
+}
+.pie3__cierre { display: grid; gap: 1.4rem; margin-bottom: clamp(3rem, 9vh, 6rem); }
+.pie3__frase {
+  font-family: var(--tit);
+  font-weight: 800;
+  font-variation-settings: "wdth" 118;
+  font-size: clamp(1.8rem, 4.2vw, 4.8rem);
+  line-height: 0.96;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.pie3__practicas { border-top: 1px solid rgba(239, 234, 223, 0.24); }
+.pie3__p {
+  position: relative;
+  display: grid;
+  grid-template-columns: 4.5rem 1fr auto;
+  align-items: center;
+  gap: 1rem 2rem;
+  padding: clamp(0.9rem, 2.2vh, 1.4rem) 0;
+  border-bottom: 1px solid rgba(239, 234, 223, 0.24);
+  text-decoration: none;
+  overflow: hidden;
+  isolation: isolate;
+}
+.pie3__p::before {
+  content: "";
+  position: absolute; inset: 0; z-index: -1;
+  background: var(--cobalto);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.6s var(--ease);
+}
+.pie3__p:hover::before, .pie3__p:focus-visible::before { transform: scaleY(1); }
+.pie3__p b { font: 400 0.8rem var(--mono); letter-spacing: 0.1em; }
+.pie3__p span { font-weight: 700; font-variation-settings: "wdth" 108; font-size: clamp(1.15rem, 2.2vw, 2rem); line-height: 1.15; }
+.pie3__p i { font-style: normal; }
+.pie3__p--actual i { color: var(--ac); }
+.pie3__base {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.8rem 2rem;
+  margin-top: clamp(2.5rem, 7vh, 4.5rem);
+  color: rgba(239, 234, 223, 0.55);
+}
+.pie3__base a { text-decoration: none; }
+.pie3__base a:hover { color: var(--crema); }
+@media (max-width: 640px) {
+  .pie3__p { grid-template-columns: 2.6rem 1fr; }
+  .pie3__p i { grid-column: 2; }
+}
+
+/* ---------- Movimiento reducido ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .etiqueta-p3::before, .portada__vaiven i { animation: none; }
+}
