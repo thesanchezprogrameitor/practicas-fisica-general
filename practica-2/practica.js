@@ -338,7 +338,7 @@
       .to(pos, { my: SUP + 4, duration: 1.4, ease: "elastic.out(1, 0.35)" })
       .to(pos, { ky: SUP - 30, duration: 0.7, ease: "power2.in" }, 0.5)
       .to(pos, { ky: 314, duration: 1.6, ease: "power2.out" }, 1.2)
-      .call(() => { pos.flota = 1; estado.textContent = "La madera flota: empuje y peso se equilibran. El metal se hunde: su peso gana."; })
+      .call(() => { pos.flota = 1; estado.textContent = "La madera flota: empuje y peso se equilibran, el metal se hunde: su peso gana."; })
       .to(fuerzas, { opacity: 1, duration: 0.5, stagger: 0.1 })
       .to({}, { duration: 3.4 })
       .to([...fuerzas, madera, metal], { opacity: 0, duration: 0.5 });
